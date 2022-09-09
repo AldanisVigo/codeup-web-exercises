@@ -52,14 +52,8 @@ const drinksBoughtOrPremiumMember = (drinksBought > 2 || premiumMember)
 const canBeApplied = drinksBoughtOrPremiumMember && !offerExpired
 alert("Can the offer be applied? " + canBeApplied)
 
-//AND TRUTH TABLE         OR TRUTH TABLE
-//00  0                   00 0
-//01  0                   01 1
-//11  1                   11 1
-//10  0                   10 1
 
-//true = 1
-//false = 0
-//! (expressionone || expressiontwo)
+
+
 
 
