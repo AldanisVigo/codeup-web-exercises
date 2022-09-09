@@ -44,7 +44,7 @@ console.log(offerCanBeApplied)
 let username = "codeup"
 let password = "notarealpassword"
 
-let valid = password.length >= 5 && username.length < 20 && password.indexOf(username) == -1
+let valid = password.length >= 5 && username.length < 20 && password.replace(username,'') == password
 console.log("Valid : " + valid)
 
 
