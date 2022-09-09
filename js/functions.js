@@ -76,8 +76,7 @@ console.log(isTwo(random))
  */
 
 function calculateTip(percent,to){
-    const tot = Number.parseFloat(to) * Number.parseFloat(percent)
-    return tot
+    return Number.parseFloat(to) * Number.parseFloat(percent)
 }
 console.log('$' + calculateTip(0.20,20))
 console.log('$' + calculateTip(0.25,25.50).toFixed(3))
