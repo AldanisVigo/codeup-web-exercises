@@ -47,6 +47,5 @@ let password = "notarealpassword"
 let valid = password.length >= 5 && username.length < 20 && password.replace(username,'') == password
 console.log("Valid : " + valid)
 
-
 let noWhiteSpace = (password.length === password.trim().length) && (username.length === username.trim().length)
 console.log("No Whitespace: " + noWhiteSpace)
