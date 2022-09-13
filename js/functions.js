@@ -30,12 +30,12 @@ console.log(helloMessage)
  * variable to the 'sayHello' function. You should see the same output in the
  * console.
  */
-const myName = "Aldanis Vigo"
+const myName = "Mi Nombre"
 console.log(sayHello(myName))
 
 // Don't modify the following line, it generates a random number between 1 and 3
 // and stores it in a variable named random
-let random = Math.floor((Math.random() * 3) + 1);
+let random = Math.floor((Math.random() * 3) + 1)
 
 /**
  * TODO:
@@ -110,7 +110,7 @@ alert("Total with tip : $" + calculateTip(tipPercentage,totalAmountBill).toFixed
  */
 
 function applyDiscount(price,discountPercent){
-    const discountAmt = Number.parseFloat(price) * Number.parseFloat(discountPercent);
+    const discountAmt = Number.parseFloat(price) * Number.parseFloat(discountPercent)
     const discountedTotal = price - discountAmt
     return discountedTotal
 }

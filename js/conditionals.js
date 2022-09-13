@@ -1,6 +1,7 @@
 "use strict";
+(function(){
 /* ########################################################################## */
-console.log("I work")
+// console.log("I work")
 /**
  * TODO:
  * Create a function named `analyzeColor` that accepts a string that is a color
@@ -24,7 +25,7 @@ console.log("I work")
 //     if(colorName.toLowerCase() === 'red'){
 //         return `${colorName} is the color of blood.`
 //     }else if(colorName.toLowerCase() === 'blue'){
-//         return `${colorName} is the color of the sky.`
+//         return ` ${colorName} is the color of the sky.`
 //     }else if(colorName.toLowerCase() === 'cyan'){
 //         return `${colorName} is the color of IDK what.`
 //     }else{
@@ -61,6 +62,7 @@ function analyzeColor(colorName){
     switch(colorName){
         case 'blue':
             return `The sky is ${colorName}`
+           //<--- I didn't add break because return exits the execution context
         case 'red':
             return `Blood is ${colorName}`
         case 'cyan':
@@ -168,5 +170,5 @@ if(confirm("Would you like to enter a number?")){
 }
 
 
-
+})()
 
