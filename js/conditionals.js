@@ -108,13 +108,13 @@ function calculateTotal(luckyNumber,total){
         case 0:
             return total
         case 1:
-            return Number.parseFloat(total) * 0.1 //10% off
+            return Number.parseFloat(total) - (Number.parseFloat(total) * 0.1) //10% off
         case 2:
-            return Number.parseFloat(total) * .25 //25% off
+            return Number.parseFloat(total) - (Number.parseFloat(total) * .25) //25% off
         case 3:
-            return Number.parseFloat(total) * .35 //35% off
+            return Number.parseFloat(total) - (Number.parseFloat(total) * .35) //35% off
         case 4:
-            return Number.parseFloat(total) * .5 //50% off
+            return Number.parseFloat(total) - (Number.parseFloat(total) * .5) //50% off
         case 5:
             return 0;
         default:
@@ -133,7 +133,7 @@ function calculateTotal(luckyNumber,total){
 // Generate a random number between 0 and 6
 const luckyNumber = Math.floor(Math.random() * 6);
 const totalBill = Number.parseFloat(prompt('Enter the total bill amount'))
-alert(calculateTotal(luckyNumber,totalBill))
+alert(`Your lucky number is ${luckyNumber} therefore, your bill is ${calculateTotal(luckyNumber,totalBill)}`)
 
 /**
  * TODO:
