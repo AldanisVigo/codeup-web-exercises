@@ -25,20 +25,33 @@
     culpa qui officia deserunt mollit anim id est laborum.
 </p>
 
+<p>
+    <button id="changeHeaderTitle">Change Header Title</button>
+    <button id="changeSubheaderColor">Change Sub Header Color to Blue</button>
+    <button id="changeLiColors">Change all li Elements Color to Grey</button>
+    <button id="changeFirstLiColor">Change First li Color to Blue</button>
+</p>
+
 <script>
     (function() {
         "use strict";
+
         // TODO: Uncomment next line and get the main header element by id
         const mainHeader = document.getElementById('main-header');
 
         // TODO: Set inner html of mainHeader to "JavaScript is Cool"
-        mainHeader.innerHTML = 'JavaScript is Cool'
-
+        // mainHeader.innerHTML = 'JavaScript is Cool'
+        document.getElementById('changeHeaderTitle').onclick = () => {
+            mainHeader.innerHTML = "JavaScript is Cool"
+        }
         // TODO: Uncomment the next line and get the sub header element by id
         const subHeader = document.getElementById('sub-header');
 
         // TODO: Set the text color of subHeader to blue
-        subHeader.style.color = 'blue'
+        // subHeader.style.color = 'blue'
+        document.getElementById('changeSubheaderColor').onclick = () => {
+            subHeader.style.color = 'blue'
+        }
 
         // TODO: Uncomment the next line and get all list items
         const listItems = document.getElementsByTagName('li');
@@ -46,13 +59,21 @@
         // TODO: Set text color on every other list item to grey
         // TODO: Set text color of li with dbid = 1 to blue
 
-        console.log(listItems)
-        for (let listItem of listItems) {
-            listItem.style.color = 'grey'
-            console.log(listItem)
-            if(listItem.getAttribute('data-dbid') === '1'){
-                listItem.style.color = 'blue'
+        // for (let listItem of listItems) {
+        //     listItem.style.color = 'grey'
+        //     console.log(listItem)
+        //     if(listItem.getAttribute('data-dbid') === '1'){
+        //         listItem.style.color = 'blue'
+        //     }
+        // }
+        document.getElementById('changeLiColors').onclick = () => {
+            for (let item of listItems){
+                item.style.color = 'grey'
             }
+        }
+
+        document.getElementById('changeFirstLiColor').onclick = () => {
+            listItems[0].style.color = 'blue'
         }
 
 
