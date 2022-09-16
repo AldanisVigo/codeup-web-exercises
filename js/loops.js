@@ -45,9 +45,7 @@ Create a for loop that uses console.log to create the output shown below.
  */
 
 for(let i = 1; i < 10; i++){
-    for(let j = 0; j < i;j++){
-        console.log(i)
-    }
+    console.log(`${i}`.repeat(i))
 }
 
 /*
