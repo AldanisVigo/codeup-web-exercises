@@ -20,11 +20,9 @@ Create a while loop that uses console.log() to create the output shown below.
 65536
  */
 
-let x = 0
 let pow = 0;
-while(x < Math.pow(2,16)){
-    x = Math.pow(2,++pow)
-    console.log(x)
+while(Math.pow(2,pow) < Math.pow(2,16)){
+    console.log(Math.pow(2,++pow))
 }
 
 /*
