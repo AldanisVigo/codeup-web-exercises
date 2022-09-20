@@ -33,5 +33,12 @@ $(function() {
     $('li').css({
         fontSize : '20px'
     })
+
+    /*
+        Craft selectors that highlight all the h1, p, and li elements.
+     */
+    $('h1,p,li').css({
+        border: '1px solid red'
+    })
 });
 
