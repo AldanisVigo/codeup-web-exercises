@@ -13,4 +13,10 @@ $(function() {
 /*
     Update the jQuery code to select and alert a different id.
  */
-alert($('#myh1').html())
+//alert($('#myh1').html())
+
+/*
+    Use the same id on 2 elements. How does this change the jQuery selection?
+    //Answer : I only get access to the first element
+ */
+alert($('#myli').html())
