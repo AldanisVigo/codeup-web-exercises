@@ -27,5 +27,11 @@ $(function() {
     // $('.codeup').css({
     //     border : '1px solid red'
     // })
+    /*
+        Using jQuery, set the font-size of all li elements to 20px.
+     */
+    $('li').css({
+        fontSize : '20px'
+    })
 });
 
