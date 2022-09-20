@@ -40,5 +40,10 @@ $(function() {
     $('h1,p,li').css({
         border: '1px solid red'
     })
+
+    /*
+        Create a jQuery statement to alert the contents of your h1 element(s).
+     */
+    alert($('h1').html())
 });
 
