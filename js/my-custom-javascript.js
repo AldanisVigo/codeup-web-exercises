@@ -23,8 +23,9 @@ $(function() {
     /*
         Using jQuery, create a border around all elements with the class codeup that is 1 pixel wide and red.
      */
-    $('.codeup').css({
-        border : '1px solid red'
-    })
+    //Remove your custom jQuery code from previous exercises.
+    // $('.codeup').css({
+    //     border : '1px solid red'
+    // })
 });
 
