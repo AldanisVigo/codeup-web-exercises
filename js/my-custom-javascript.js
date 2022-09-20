@@ -19,4 +19,5 @@ $(function() {
     Use the same id on 2 elements. How does this change the jQuery selection?
     //Answer : I only get access to the first element
  */
-alert($('#myli').html())
+// Remove your custom jQuery code from previous exercises.
+// alert($('#myli').html())
