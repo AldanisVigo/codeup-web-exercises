@@ -83,5 +83,19 @@ $(function() {
         })
     })
 
+    /*
+        Set all li text color to red when the mouse is hovering; reset to black when it is not.
+     */
+    $('li').hover(function(){
+        $(this).css({
+            color : 'red'
+        })
+    }).mouseout(function(){
+        $(this).css({
+            color : 'black'
+        })
+    })
+
+
 });
 
