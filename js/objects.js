@@ -138,6 +138,15 @@
      *   `showBookInfo` function.
      */
 
+    // const createBook = (title,author) => {
+    //     return {
+    //         title : title,
+    //         author : {
+    //             firstName : author.split(' ')[0],
+    //             lastName : author.split(' ')[1]
+    //         },
+    //     }
+    // }
 
 
 
