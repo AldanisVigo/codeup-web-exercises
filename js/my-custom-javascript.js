@@ -64,5 +64,14 @@ $(function() {
     // $('h1,p,li').css({
     //     border: '1px solid blue'
     // })
+
+    /*
+        Add jQuery code that will change the background color of an h1 element when clicked.
+     */
+    $('h1').click(function(){
+        $(this).css({
+            background : 'red'
+        })
+    })
 });
 
