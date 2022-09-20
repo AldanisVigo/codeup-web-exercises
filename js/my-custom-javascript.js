@@ -37,31 +37,32 @@ $(function() {
     /*
         Craft selectors that highlight all the h1, p, and li elements.
      */
+    // Remove your custom jQuery code from previous exercises.
     //li elements
-    $('li').css({
-        border: '1px solid red'
-    })
-
-    //h1 elements
-    $('h1').css({
-        border: '1px solid red'
-    })
-
-    //p elements
-    $('p').css({
-        border: '1px solid red'
-    })
-
-    /*
-        Create a jQuery statement to alert the contents of your h1 element(s).
-     */
-    alert($('h1').html())
-
-    /*
-        Combine your selectors that highlight all the h1, p, and li elements
-     */
-    $('h1,p,li').css({
-        border: '1px solid blue'
-    })
+    // $('li').css({
+    //     border: '1px solid red'
+    // })
+    //
+    // //h1 elements
+    // $('h1').css({
+    //     border: '1px solid red'
+    // })
+    //
+    // //p elements
+    // $('p').css({
+    //     border: '1px solid red'
+    // })
+    //
+    // /*
+    //     Create a jQuery statement to alert the contents of your h1 element(s).
+    //  */
+    // alert($('h1').html())
+    //
+    // /*
+    //     Combine your selectors that highlight all the h1, p, and li elements
+    //  */
+    // $('h1,p,li').css({
+    //     border: '1px solid blue'
+    // })
 });
 
