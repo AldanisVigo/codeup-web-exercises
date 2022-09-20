@@ -73,5 +73,15 @@ $(function() {
             background : 'red'
         })
     })
+
+    /*
+        Make all paragraphs have a font size of 18px when they are double clicked.
+     */
+    $('p').click(function(){
+        $(this).css({
+            fontSize: '18px'
+        })
+    })
+
 });
 
