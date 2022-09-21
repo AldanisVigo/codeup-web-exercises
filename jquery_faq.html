@@ -60,6 +60,17 @@
                 })
             })
 
+            //TRAVERSING STEP 5 : When any list item is clicked,
+            // first li of the parent ul should have a font color
+            // of blue.
+            $('li').click(e=>{
+                $(e.target).parent().children().first().css({
+                    color : 'blue'
+                })
+            })
+
+
+
         })
     </script>
 </head>
