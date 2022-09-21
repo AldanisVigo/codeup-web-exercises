@@ -30,6 +30,16 @@
 
             //Add the link to the body of the document
             $('body').append(link)
+
+            //BONUS: When any of the dt elements is clicked,
+            // the element that was clicked
+            // should be highlighted.
+            $('dt').click(function(){
+                $(this).css({
+                    background: 'rgba(255,0,0,0.5)',
+                    border: '1px dashed orange'
+                })
+            })
         })
     </script>
 </head>
