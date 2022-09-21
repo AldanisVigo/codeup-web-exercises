@@ -11,9 +11,9 @@
     <script src="js/jquery.js"></script>
     <script defer>
         //STEP : 5
-        $(()=>{ //When the document is loaded
+        $(()=> { //When the document is loaded
             //Create a link
-            const link  = document.createElement('a')
+            const link = document.createElement('a')
 
             //And some text to add to the link
             const linkText = document.createTextNode("SHOW MORE")
@@ -22,7 +22,7 @@
             $(link).append($(linkText))
 
             //Add a click event listener to the link
-            $(link).click(()=>{
+            $(link).click(() => {
                 //When the user clicks the link
                 //toggle the 'invisible' class on all dd elements
                 $('dd').toggleClass('invisible')
@@ -34,12 +34,32 @@
             //BONUS: When any of the dt elements is clicked,
             // the element that was clicked
             // should be highlighted.
-            $('dt').click(function(){
+            $('dt').click(function () {
                 $(this).css({
                     background: 'rgba(255,0,0,0.5)',
                     border: '1px dashed orange'
                 })
             })
+
+            //TRAVERSING STEP 3 : Create a button that, when clicked,
+            // makes the last li in each ul have a yellow background.
+            $('#makeLastLiYellowButton').click(() => {
+                $('ul').each(function(){
+                    $(this).children().last().css({
+                        background: 'yellow'
+                    })
+                })
+            })
+
+            //TRAVERSING STEP 4: When any h3 is clicked, the lis
+            // underneath it should be bolded.
+            // Use font-weight: bold to achieve this.
+            $('h3').click(e=>{
+                $(e.target).next().children().css({
+                    fontWeight: 'bold'
+                })
+            })
+
         })
     </script>
 </head>
@@ -127,6 +147,7 @@
             Yosemite is home to one of the tallest waterfalls in the world.
         </li>
     </ul>
+
     <h3>Yellowstone</h3>
     <ul>
         <li>
@@ -142,6 +163,7 @@
             Yellowstone Lake has 131.7 sq. miles of surface area and 141 miles of shoreline. It is the largest high elevation lake in North America.
         </li>
     </ul>
+
     <h3>Glacier National Park</h3>
     <ul>
         <li>
@@ -158,5 +180,8 @@
         </li>
     </ul>
 
+<!--    TRAVERSING STEP 3 : Create a button that, when clicked,
+        makes the last li in each ul have a yellow background.-->
+    <button id="makeLastLiYellowButton">Make last items all yellow</button>
 </body>
 </html>
