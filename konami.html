@@ -2,10 +2,37 @@
 <html>
 <head>
   <title>Konami Code</title>
+  <style>
+    @keyframes bounce{
+      from {
+        transform: translateX(0px);
+        color: blue;
+      }
+      to {
+        transform: translateX(calc(100vw - 170px));
+        color: purple;
+      }
+    }
+
+    @keyframes scale {
+      from {
+        transform : scale(1);
+      }
+      to {
+        transform : scale(0.3);
+      }
+    }
+
+    #title{
+      width: fit-content;
+      font-weight: bold;
+      font-size: xx-large;
+    }
+
+  </style>
 </head>
 <body>
-<h1>Konami Code</h1>
-
+<div id="title">Konami Code</div>
 <script src="/js/jquery.js"></script>
 <script>
   "use strict";
@@ -19,9 +46,161 @@
     Be creative!
     Happy Playing.
    */
+
+
+  let expectedCode = [38,38,40,40,37,39,37,39,66,65]
+  let currentCode = []
   $(document).keyup(function(event){
-    console.log(event.keyCode);
+    console.log("expected code: " + expectedCode)
+    console.log("current code: " + currentCode)
+
+    let win = () => {
+      //Change the background
+      document.body.style.background = 'linear-gradient(to top right,orange,blue) no-repeat'
+      document.body.style.height = '100vh'
+
+      //Alert the user of the discount
+      alert("Code Correct: You get 30% OFF.")
+
+      //Play a sound using the audio context
+
+      //Create a new window audio context
+      const context = new window.AudioContext()
+
+      //Create an oscillator with note A
+      const oscA = context.createOscillator()
+      oscA.type = 'sine'
+      oscA.frequency.value = 440 //440Hz
+
+      //Create an LFO
+      const lfo = context.createOscillator()
+      lfo.type = 'sine'
+      lfo.frequency.value = 1 //1Hz - 1 sweep / sec
+
+      //Create a gain node
+      const gain = new GainNode(context)
+      gain.value = 1
+
+      //Connect the LFO to the gain node's gain value
+      lfo.connect(gain.gain)
+
+      //Connect the A oscillator to the gain node
+      //and connect the gain node to the output
+      oscA.connect(gain).connect(context.destination)
+
+      //Start the LFO
+      lfo.start()
+
+      //Start the A oscillator
+      oscA.start(context.currentTime)
+
+      //Stop after 3 sweeps
+      oscA.stop(context.currentTime + 3)
+
+      //Be creative
+      explode()
+    }
+
+    if(event.keyCode === 13){ //Enter
+      currentCode.every((val,index)=>val === expectedCode[index]) ?
+        win() :
+        alert("You Entered The Wrong Code! Keep trying!.")
+
+      currentCode = []
+    }else{
+      currentCode.push(event.keyCode)
+    }
+    // console.log(event.keyCode);
   });
+
+  const explode = () => {
+    let canvas = document.createElement('canvas')
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+    $('body').append(canvas)
+    $('body').css({
+      padding: '0px',
+      margin : '0px'
+    })
+
+    $(canvas).css({
+      background: 'black'
+    })
+
+    let cctx = canvas.getContext('2d')
+
+    class star {
+      constructor(x,y,speed){
+        this.x = x
+        this.y = y
+        this.speed = speed
+      }
+
+      fall(){
+        this.y += this.speed
+        if(this.y > window.innerHeight){
+          delete this
+        }
+      }
+    }
+    let stars = []
+    let frame = 0
+    const animateStars = () => {
+      //Clear the canvas
+      cctx.clearRect(0,0,canvas.width,canvas.height)
+
+      //Update the stars model and redraw
+      for(let s of stars){
+        s.fall()
+        // cctx.moveTo(s.x,s.y)
+        cctx.fillStyle = '#fff'
+        cctx.fillRect(s.x,s.y,4,4)
+      }
+
+      requestAnimationFrame(animateStars)
+    }
+    setInterval(()=>{
+      //Generate a random number of stars
+      for(let i = 0; i < ((Math.random() * 100) + 1);i++) {
+        let randX = (Math.random() * window.innerWidth) + 1
+        let randSpeed = (Math.random() * 5) + 1
+        let newStar = new star(randX, 0, randSpeed)
+        stars.push(newStar)
+      }
+    },3000) //iterate every 3 secs
+
+    animateStars()
+
+    $('#title').css({
+      animation : 'bounce 3s linear 2s infinite alternate'
+    })
+
+    //Create 30% off
+    const percentOff = document.createElement('div')
+    // percentOff.innerHTML = '!!! You have added 30 lives!!!'
+    // percentOff.style.width = 'fit-content'
+    // percentOff.style.position = 'absolute'
+    // percentOff.style.left = window.innerWidth / 2 - 200 + 'px'
+    // percentOff.style.top = window.innerHeight / 2 + 'px'
+    // percentOff.style.color = 'white'
+    // percentOff.style.fontSize = 'xxx-large'
+    // percentOff.style.fontWeight = 'bolder'
+    // percentOff.style.animation = 'scale 3s ease-in-out 2s infinite alternate'
+    $(percentOff).css({
+      width : 'fit-content',
+      position: 'absolute',
+      left : window.innerWidth / 2 - 200 + 'px',
+      top : window.innerHeight / 2 + 'px',
+      color : 'white',
+      fontSize : 'xxx-large',
+      fontWeight : 'bolder',
+      animation : 'scale 3s ease-in-out 2s infinite alternate',
+      textAlign : 'center'
+    })
+
+    $(percentOff).text("You have added 30 lives!!!")
+    document.body.appendChild(percentOff)
+  }
 </script>
 </body>
 </html>
