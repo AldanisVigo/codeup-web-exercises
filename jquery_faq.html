@@ -7,6 +7,39 @@
         .invisible{
             visibility: hidden;
         }
+
+        .picture_frame{
+            height: 200px;
+            width: calc(80%);
+            border: 8px groove grey;
+            background: lightblue;
+            align-self: center;
+            margin: auto;
+            border-radius: 9px;
+        }
+
+        #picone{
+            background: url('img/yosemite.png');
+            background-size: cover;
+        }
+
+        #pictwo{
+            background: url('img/yellowstone.png');
+            background-size: cover;
+        }
+
+        #picthree{
+            background: url('img/glacier.png');
+            background-size: cover;
+        }
+
+        .frameswap{
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            align-items: center;
+        }
+
     </style>
     <script src="js/jquery.js"></script>
     <script defer>
@@ -68,6 +101,62 @@
                     color : 'blue'
                 })
             })
+
+            //TRAVERSING BONUS
+            /*
+            The rules are the following:
+
+
+             */
+            $('#piconeswap').click(e=>{
+                let piconebg = $('#picone').css('background')
+                let pictwobg = $('#pictwo').css('background')
+                //The left frame swaps to the right
+                $('#pictwo').css({
+                    background : piconebg
+                })
+                // and takes the image from the frame in the center.
+                $('#picone').css({
+                    background : pictwobg
+                })
+            })
+
+            $('#pictwoswap').click(e=>{
+                let piconebg = $('#picone').css('background')
+                let pictwobg = $('#pictwo').css('background')
+                let picthreebg = $('#picthree').css('background')
+                //The center frame swaps randomly to either the
+                // left or right.
+                if(Math.floor((Math.random() * 2) + 1) === 2){
+                    $('#pictwo').css({
+                        background : picthreebg
+                    })
+                    $('#picthree').css({
+                        background : pictwobg
+                    })
+                }else{
+                    $('#pictwo').css({
+                        background : piconebg
+                    })
+                    $('#picone').css({
+                        background : pictwobg
+                    })
+                }
+            })
+
+            $('#picthreeswap').click(e=>{
+                let picthreebg = $('#picthree').css('background')
+                let pictwobg = $('#pictwo').css('background')
+                //The right frame swaps to the left
+                $('#picthree').css({
+                    background : pictwobg
+                })
+                // and takes the image from the frame in the center.
+                $('#pictwo').css({
+                    background : picthreebg
+                })
+            })
+
 
 
 
@@ -190,7 +279,33 @@
             Evidence of human use in the area dates back over 12,000 years.
         </li>
     </ul>
+<!--    Bonus-->
+<!--    Create 3 divs that each look like a picture frame.
+        Each one should have a unique background image and a
+        button underneath that swaps the image from the frame.
+        Use the traversing functions of jQuery to accomplish this.-->
+        <div class="frameswap">
+            <div class="picture_frame" id="picone">
 
+            </div>
+
+            <div class="picture_frame" id="pictwo">
+
+            </div>
+            <div class="picture_frame" id="picthree">
+
+            </div>
+            <button id="piconeswap">Swap</button>
+            <button id="pictwoswap">Swap</button>
+            <button id="picthreeswap">Swap</button>
+        </div>
+<!--    The rules are the following:-->
+
+<!--    The left frame swaps to the right and takes the image from
+        the frame in the center.-->
+<!--    The center frame swaps randomly to either the left or right.-->
+<!--    The right frame swaps to the left and takes the image from
+        the frame in the center.-->
 <!--    TRAVERSING STEP 3 : Create a button that, when clicked,
         makes the last li in each ul have a yellow background.-->
     <button id="makeLastLiYellowButton">Make last items all yellow</button>
