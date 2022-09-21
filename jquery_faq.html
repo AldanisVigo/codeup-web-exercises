@@ -8,6 +8,30 @@
             visibility: hidden;
         }
     </style>
+    <script src="js/jquery.js"></script>
+    <script defer>
+        //STEP : 5
+        $(()=>{ //When the document is loaded
+            //Create a link
+            const link  = document.createElement('a')
+
+            //And some text to add to the link
+            const linkText = document.createTextNode("SHOW MORE")
+
+            //Append the text to the link
+            $(link).append($(linkText))
+
+            //Add a click event listener to the link
+            $(link).click(()=>{
+                //When the user clicks the link
+                //toggle the 'invisible' class on all dd elements
+                $('dd').toggleClass('invisible')
+            })
+
+            //Add the link to the body of the document
+            $('body').append(link)
+        })
+    </script>
 </head>
 <body>
     <!--STEP 2 : In a HTML structure, create a definition list containing 10 FAQs about national parks.-->
@@ -73,5 +97,6 @@
             #10 in Best U.S. National Parks - Stretching across 500,000-plus acres in North Carolina and Tennessee, Great Smoky Mountains National Park offers ample opportunities for wildlife-viewing and hiking, including the popular Roaring Fork Motor Nature Trail and Chimney Tops trail. The mountains are also home to more than 1,500 types of plants and flowers, which visitors can see in the spring when the national park hosts a festival of programs and guided hikes to see the blooms. Meanwhile, those interested in a fall visit will be greeted with colorful foliage among the trees that line the hiking trails.
         </dd>
     </dl>
+
 </body>
 </html>
