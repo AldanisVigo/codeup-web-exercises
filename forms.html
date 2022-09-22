@@ -5,18 +5,31 @@
     <title>Register With Us</title>
 </head>
 <body>
-    <form method="POST" action="https://request-inspector.glitch.me/">
-        <label for="email">
-            <input type="email" id="email" name="email" placeholder="Email"/>
-        </label>
-        <br>
-        <label for="password">
-            <input type="password" id="password" name="password" placeholder="Password"/>
-        </label>
-        <br>
-        <label for="bio">
-            <textarea id="bio" name="bio" placeholder="Bio" cols="15"></textarea>
-        </label>
-    </form>
+    <main>
+        <form method="POST" action="https://request-inspector.glitch.me/">
+            <section>
+                <label for="email">
+                    <input type="email" id="email" name="email" placeholder="Email"/>
+                </label>
+                <br>
+                <label for="password">
+                    <input type="password" id="password" name="password" placeholder="Password"/>
+                </label>
+                <br>
+                <label for="bio">
+                    <textarea id="bio" name="bio" placeholder="Bio" cols="15"></textarea>
+                </label>
+            </section>
+            <section>
+                <fieldset>
+                    <legend>How did you hear about us?</legend>
+                    <input name="source" type="radio" value="billboard" selected>Billboard</input>
+                    <input name="source" type="radio" value="radio advertisement">Radio Advertisement</input>
+                    <input name="source" type="radio" value="internet advertisement">Internet Advertisement</input>
+                </fieldset>
+            </section>
+
+        </form>
+    </main>
 </body>
 </html>
