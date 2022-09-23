@@ -7,3 +7,11 @@
     color: purple; /* single line comment */
     text-decoration: underline;
 }
+
+/*
+    What do the above exercises tell you about the precedence of style attributes and embedded and external stylesheets?
+
+    1. style tags first,
+    2. then embedded stylesheets,
+    3. then external css stylesheets
+ */
