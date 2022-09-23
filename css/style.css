@@ -1,0 +1,9 @@
+/*
+    4. Inside of style.css, copy the above css, but change to font color to purple.
+    What color is the h1 after making this change? - Still blue like the sky
+    Remove your embedded stylesheet and view the page again. - It turned purple
+*/
+.fancy-header {
+    color: purple; /* single line comment */
+    text-decoration: underline;
+}
