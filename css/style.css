@@ -14,4 +14,10 @@
     1. style tags first,
     2. then embedded stylesheets,
     3. then external css stylesheets
+*/
+
+/*
+    Remove any style attributes and embedded stylesheets. From this point forward, we will only be working with external stylesheets.
+
+    Finally, commit the changes to your git repository, and push to GitHub.
  */
