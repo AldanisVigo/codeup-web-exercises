@@ -39,6 +39,11 @@ li {
     list-style: square;
 }
 
+/*Add a style to change the table, table cells td and rows tr padding and font sizes.*/
+table, td, tr {
+    padding: 20px;
+    font-size: 20px;
+}
 
 /*
     What do the above exercises tell you about the precedence of style attributes and embedded and external stylesheets?
