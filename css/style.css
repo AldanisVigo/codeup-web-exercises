@@ -3,6 +3,13 @@
     What color is the h1 after making this change? - Still blue like the sky
     Remove your embedded stylesheet and view the page again. - It turned purple
 */
+/*Add a style to change the font for the entire page. Use google fonts if you would like.*/
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap');
+
+* {
+    font-family: Dancing Script;
+}
+
 .fancy-header {
     color: purple; /* single line comment */
     text-decoration: underline;
