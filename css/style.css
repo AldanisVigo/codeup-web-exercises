@@ -45,6 +45,33 @@ table, td, tr {
     font-size: 20px;
 }
 
+/*Add a style to alter the anchor tags and its different states. (e.g. link, visited, hover and active).*/
+a {
+    color: orange;
+}
+
+a:link{
+    text-shadow: 40px 40px darkblue;
+    color: darkblue;
+}
+
+a:visited{
+    text-shadow: 50px 50px orangered;
+    color: orangered;
+}
+a:hover{
+    text-shadow: 10px 10px #373fff;
+    color: #373fff;
+}
+a:active{
+    text-shadow: 20px 20px mediumvioletred;
+    color: mediumvioletred;
+}
+
+/*Continue experimenting with styles to increase the visual appeal of the page.*/
+/*Finally, commit the changes to your git repository, and push to GitHub.*/
+
+
 /*
     What do the above exercises tell you about the precedence of style attributes and embedded and external stylesheets?
 
