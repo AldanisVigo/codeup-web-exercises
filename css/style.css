@@ -8,8 +8,14 @@
     text-decoration: underline;
 }
 
+/*Open up your welcome.html file from earlier.*/
+/*Center the main heading*/
 header>.fancy-header{
     text-align: center;
+}
+/*Add a style to change the background color of the page.*/
+body{
+    background: linear-gradient(to bottom, red, orange, red);
 }
 
 /*
