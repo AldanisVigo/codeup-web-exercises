@@ -25,3 +25,6 @@ for(let i = 0; i < 50;i++){
         console.log(`Here is an odd number: ${i}`)
     }
 }
+
+
+let (a,s) => a.map(i=>({...i,continent: s}))
