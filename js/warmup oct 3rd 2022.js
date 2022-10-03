@@ -1,6 +1,6 @@
 // re-write the following using a for loop: var i = 20; while (i >= 0) { console.log(i); i--; }
 
-for(let i = 20; i < 0; i--){
+for(let i = 20; i > 0; i--){
     console.log(i)
 }
 
