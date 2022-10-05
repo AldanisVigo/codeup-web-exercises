@@ -1,0 +1,157 @@
+
+/* default properties */
+
+body{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    /*align-items: baseline;*/
+}
+
+.alert-info{
+
+}
+
+.hidden-on-desktop{
+    display: none;
+}
+
+body > h1 {
+    /*text-align: center;*/
+    /*margin: 0;*/
+    /*margin-top: 0.2em;*/
+    /*margin-bottom: .6em;*/
+    /*display: inline;*/
+    margin-right: auto;
+    /*justify-content: left;*/
+}
+
+nav{
+    /*display: inline-block;*/
+}
+
+.nav-links{
+    /*Nav menu*/
+    list-style: none;
+    padding: 0;
+    /*display: flex;*/
+    flex-direction: row;
+    align-items: stretch;
+    /*margin: 0;*/
+    /*display: inline-block;*/
+}
+.nav-links>li{
+    /*display: flex;*/
+    /*background-color: lightgray;*/
+    /*margin-bottom: .8em;*/
+    display: inline-block;
+    line-height: 3em;
+}
+
+.nav-links>li>a{
+    margin-left: 1.5em;
+    /*Nav links individual*/
+    /*background: lightgrey;*/
+    /*padding: 10px;*/
+    /*width: 100%;*/
+    /*text-align: center;*/
+}
+
+.header-img{
+    width: 100%;
+    flex-basis: 100%;
+    /*margin: auto;*/
+}
+
+.header-img>img{
+    width: 100%;
+}
+
+.main {
+    flex-basis: 60%;
+}
+
+.sub-section {
+    flex-basis: 40%;
+}
+
+footer {
+    margin-top: 3em;
+    position: relative;
+    bottom: 0px;
+    left: 0px;
+}
+
+footer>.social-media-links{
+
+}
+
+
+@media only screen and (max-width: 769px){
+    /*    Small Screen*/
+    body{
+        display: block;
+    }
+
+    .hidden-on-desktop {
+        display: block;
+        border: 1px solid grey;
+        padding: 15px;
+        background: #ccfffe;
+        text-align: center;
+    }
+
+    .hidden-on-desktop > a{
+        text-decoration: none;
+        color: black;
+    }
+
+    .header-img{
+        flex-basis: 100%;
+        align-content: center;
+    }
+
+    .header-img > img{
+        width: 100%;
+        height: 17em;
+    }
+
+    .nav-links>li{
+        display: flex;
+        background-color: lightgray;
+        margin-bottom: .8em;
+    }
+
+    .nav-links>li>a{
+        /*Nav links individual*/
+        background: lightgrey;
+        padding: 10px;
+        width: 100%;
+        text-align: center;
+    }
+
+    body > h1 {
+        text-align: center;
+        margin: 0;
+        margin-top: 0.2em;
+        margin-bottom: .6em;
+    }
+
+
+    .nav-links{
+        /*Nav menu*/
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        margin: 0;
+    }
+}
+
+/*@media only screen and (min-width: 769px){*/
+/*    !*    Large Screen *!*/
+/*    .hidden-on-desktop {*/
+/*        display: none;*/
+/*    }*/
+/*}*/

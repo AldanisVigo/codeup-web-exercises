@@ -1,0 +1,16 @@
+.jumbotron {
+    background-image: url(/img/pizza.png);
+    height: 346px;
+    background-size: cover;
+}
+
+.jumbotron-tab-num{
+    color: white;
+    background: #6c6565;
+    /*padding: px;*/
+    font-weight: bold;
+    padding: 3px 8px 3px 8px;
+    border-radius: 100%;
+    height: 10px;
+    margin-right: 5px;
+}

@@ -1,0 +1,207 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Bootstrap</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <!-- Your custom css styles go here -->
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Pizza World</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="#">Order Online</a>
+            </li>
+              <a class="nav-link" href="#">Menu</a>
+            </li>
+            <li class="nav-item">
+              <form class="d-flex">
+                <input type="textbox form-control me-2" placeholder="Zip Code" aria-label="Zip Code">
+                &nbsp;
+                <button class="btn btn-outline-primary" type="submit">Search stores near you!</button>
+              </form>
+            </li>
+          </ul>
+      </div>
+      <button class="btn float-right" type="submit">
+        <img src="node_modules/bootstrap-icons/icons/person-fill.svg" class="h-50 h-50 ml-auto"/>
+        Sign Up!
+      </button>
+    </div>
+  </nav>
+  <div class="container mb-5">
+    <div class="jumbotron">
+
+    </div>
+    <h2>
+      Build your own pizza!
+    </h2>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="size_and_crust_tab" data-bs-toggle="tab" data-bs-target="#size_and_crust" type="button" role="tab" aria-controls="home" aria-selected="true"><span class="badge rounded-pill bg-secondary mx-2 p-2">1</span>Size and Crust</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="cheese_and_sauce_tab" data-bs-toggle="tab" data-bs-target="#cheese_and_sauce" type="button" role="tab" aria-controls="profile" aria-selected="false"><span class="badge rounded-pill bg-secondary mx-2 p-2">2</span>Cheese and Sauce</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="toppings_tab" data-bs-toggle="tab" data-bs-target="#toppings" type="button" role="tab" aria-controls="contact" aria-selected="false"><span class="badge rounded-pill bg-secondary mx-2 p-2">3</span>Toppings</button>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active p-0 m-0" id="home" role="tabpanel" aria-labelledby="home-tab">
+  <!--size and crust-->
+          <div class="card">
+            <div class="card-header p-0 m-0">
+              <div class="navbar p-3 bg-primary text-light">Choose size and crust</div>
+            </div>
+            <div class="card-body p-2">
+              <p class="card-text">
+                <ul class="list-group">
+                  <li class="list-group-item disabled bg-light">Hand Tossed</li>
+                  <li class="list-group-item">Garlic seasoned crust, with rich buttery taste.</li>
+                  <li class="list-group-item">
+                    <input class="form-radio-input me-1" name="hand_tossed" type="radio" value="large" aria-label='Small (10")'>
+                    Small (10")
+                  </li>
+                  <li class="list-group-item">
+                    <input class="form-radio-input me-1" name="hand_tossed" type="radio" value="medium" aria-label='Medium (12")'>
+                    Medium (12")
+                  </li>
+                </ul>
+                <br>
+                <ul class="list-group">
+                  <li class="list-group-item disabled bg-light">Crispy Thin</li>
+                  <li class="list-group-item">Thin enough for optimum crispy to crunchy ratio.</li>
+                  <li class="list-group-item">
+                    <input class="form-radio-input me-1" name="crispy_thin" type="radio" value="large" aria-label="Medium (12")'>
+                    Medium (12")
+                  </li>
+                  <li class="list-group-item">
+                    <input class="form-radio-input me-1" name="crispy_thin" type="radio" value="medium" aria-label='Large (14")'>
+                    Large (14")
+                  </li>
+                </ul>
+              </p>
+            </div>
+            <div class="card-footer">
+              <a href="#" class="btn btn-primary next-btn" style="float: right;" role="button" id="first-tab-next">Next Step ></a>
+            </div>
+          </div>
+        </div>
+      <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+<!--cheese and sauce-->
+        <div class="card">
+          <div class="card-header p-0 m-0">
+            <div class="navbar p-3 bg-primary text-light">Choose Cheese and Sauce</div>
+          </div>
+          <div class="card-body p-2">
+            <p class="card-text">
+            <ul class="list-group">
+              <li class="list-group-item disabled bg-light">Cheese</li>
+              <li class="list-group-item">How much?</li>
+              <li class="list-group-item">
+
+              </li>
+            </ul>
+            <br>
+            <ul class="list-group">
+              <li class="list-group-item disabled bg-light">Sauce</li>
+              <li class="list-group-item">What type?</li>
+              <li class="list-group-item">
+
+              </li>
+            </ul>
+            </p>
+          </div>
+          <div class="card-footer">
+            <a href="#" class="btn btn-primary next-btn mx-3" style="float: right;" role="button" id="second-tab-next">Next Step ></a>
+            <a href="#" class="btn btn-primary next-btn" style="float: right;" role="button" id="second-tab-prev">< Previous Step</a>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+<!--toppings-->
+        <div class="card">
+          <div class="card-header p-0 m-0">
+            <div class="navbar p-3 bg-primary text-light">Choose Toppings</div>
+          </div>
+          <div class="card-body p-2">
+            <p class="card-text">
+            <ul class="list-group">
+              <li class="list-group-item disabled bg-light">Choose Meats</li>
+              <li class="list-group-item">
+
+              </li>
+            </ul>
+            <br>
+            <ul class="list-group">
+              <li class="list-group-item disabled bg-light">Choose Non-Meats</li>
+              <li class="list-group-item">
+
+              </li>
+            </ul>
+            </p>
+          </div>
+          <div class="card-footer">
+            <a href="#" class="btn btn-primary next-btn" style="float: right;" role="button" id="third-tab-checkout">
+              Checkout
+<!--              <img src="node_modules/bootstrap-icons/icons/cart.svg"/>-->
+                  <svg class="bi" width="32" height="32" fill="currentColor">
+                    <use xlink:href="bootstrap-icons.svg#shop"/>
+                  </svg>
+            </a>
+            <a href="#" class="btn btn-primary next-btn mx-3" style="float: right;" role="button" id="third-tab-prev">< Previous Step</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  <script defer>
+    let firstTabEl = document.querySelector('#myTab li:nth-child(1) button')
+    let secondTabEl = document.querySelector('#myTab li:nth-child(2) button')
+    let thirdTabEl = document.querySelector('#myTab li:nth-child(3) button')
+
+    let firstTab = new bootstrap.Tab(firstTabEl)
+    let secondTab = new bootstrap.Tab(secondTabEl)
+    let thirdTab = new bootstrap.Tab(thirdTabEl)
+
+    let firstTabNextButton = document.getElementById('first-tab-next')
+    let secondTabNextButton = document.getElementById('second-tab-next')
+    let secondTabPrevButton = document.getElementById('second-tab-prev')
+    let thirdTabPrevButton = document.getElementById('third-tab-prev')
+    let thirdTabCheckout = document.getElementById('third-tab-checkout')
+
+    firstTabNextButton.onclick = e => {
+      console.log("Clicked first tab next button")
+      secondTab.show()
+    }
+
+    secondTabNextButton.onclick = e => {
+      thirdTab.show()
+    }
+
+    secondTabPrevButton.onclick = e => {
+      console.log("Clicked second tab previous button")
+      firstTab.show()
+    }
+
+    thirdTabPrevButton.onclick = e => {
+      secondTab.show()
+    }
+    //
+    // thirdTabCheckout.onclick = e => {
+    //   console.log("Checking out")
+    // }
+  </script>
+</body>
+</html>
