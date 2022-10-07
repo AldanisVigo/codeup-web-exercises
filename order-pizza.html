@@ -269,7 +269,7 @@
     let secondTabEl = document.querySelector('#myTab li:nth-child(2) button')
     let thirdTabEl = document.querySelector('#myTab li:nth-child(3) button')
 
-    let firstTab = new bootstrap.Tab(firstTabEl)
+    firstTab = new bootstrap.Tab(firstTabEl);
     let secondTab = new bootstrap.Tab(secondTabEl)
     let thirdTab = new bootstrap.Tab(thirdTabEl)
 
@@ -296,10 +296,10 @@
     thirdTabPrevButton.onclick = e => {
       secondTab.show()
     }
-    //
-    // thirdTabCheckout.onclick = e => {
-    //   console.log("Checking out")
-    // }
+
+    thirdTabCheckout.onclick = e => {
+      console.log("Checking out")
+    }
   </script>
 </body>
 </html>
