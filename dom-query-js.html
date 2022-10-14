@@ -58,14 +58,8 @@
 
         // TODO: Set text color on every other list item to grey
         // TODO: Set text color of li with dbid = 1 to blue
-
-        // for (let listItem of listItems) {
-        //     listItem.style.color = 'grey'
-        //     console.log(listItem)
-        //     if(listItem.getAttribute('data-dbid') === '1'){
-        //         listItem.style.color = 'blue'
-        //     }
-        // }
+        Array.from(listItems).filter((item,index)=>index%2>0).forEach(i=>i.style.color = 'grey')
+        Array.from(listItems).filter(item=>item.getAttribute('data-dbid') === '1')[0].style.color = 'blue'
         document.getElementById('changeLiColors').onclick = () => {
             for (let item of listItems){
                 item.style.color = 'grey'
@@ -75,8 +69,6 @@
         document.getElementById('changeFirstLiColor').onclick = () => {
             listItems[0].style.color = 'blue'
         }
-
-
 
         // TODO: Uncomment the next line and get all elements with class name sub-paragraph
         const subParagraphs = document.getElementsByClassName('sub-paragraph');
