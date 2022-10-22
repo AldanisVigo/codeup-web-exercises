@@ -58,8 +58,8 @@
 
         // TODO: Set text color on every other list item to grey
         // TODO: Set text color of li with dbid = 1 to blue
-        Array.from(listItems).filter((item,index)=>index%2>0).forEach(i=>i.style.color = 'grey')
-        Array.from(listItems).filter(item=>item.getAttribute('data-dbid') === '1')[0].style.color = 'blue'
+        // Array.from(listItems).filter((item,index)=>index%2>0).forEach(i=>i.style.color = 'grey')
+        // Array.from(listItems).filter(item=>item.getAttribute('data-dbid') === '1')[0].style.color = 'blue'
         document.getElementById('changeLiColors').onclick = () => {
             for (let item of listItems){
                 item.style.color = 'grey'
