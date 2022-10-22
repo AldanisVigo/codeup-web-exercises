@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ajax Blog</title>
+<!--    Bootstrap Style-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Danny's Blog</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav" id="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <div id="posts" class="row">
+
+        </div>
+    </div>
+
+<!--    Bootstrap Script-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+<!--    jQuery Script-->
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+    <script>
+        // Use Ajax to load the contents of blog.json and add the data from it to your #posts div.
+        const retrievePosts = async () => {
+            try {
+                //Attempt to read the posts json file
+                let posts = await $.get('data/blog.json') //Retrieve all the posts
+
+                // Expected Structure
+                // {
+                //     "title": "My First Blog Post",
+                //     "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                //     "categories": [
+                //         "greek"
+                //     ],
+                //     "date": "January 25, 2015"
+                // }
+
+                posts.forEach(post => { //Iterate through each available post
+                    //Generate a post item
+                    const postItem = document.createElement('div')
+                    //Add the class of post to the post item
+                    $(postItem).addClass('post')
+                    //Generate a post title heading
+                    const postTitle = document.createElement('h2')
+                    //Add the class of post_title to the postTitle
+                    $(postTitle).addClass('post_title')
+                    //Populate the title heading with the post title
+                    $(postTitle).text(post.title)
+                    //Generate the post content container
+                    const postContent = document.createElement('div')
+                    //Add the class of post_content to the post content
+                    $(postContent).addClass('post_content')
+                    //Generate hashtags string based on the categories
+                    const hashtags = '#' + post.categories.join(` #`)
+                    //Generate hashtags container
+                    const hashtagsContainer = document.createElement('div')
+                    //Populate the hashtags container with the hashtags
+                    $(hashtagsContainer).text(hashtags)
+                    //Add some margin top to the hashtags container
+                    $(hashtagsContainer).css({
+                        marginTop : '10px'
+                    })
+                    //Populate the post content container with the post content
+                    $(postContent).text(post.content)
+                    //Append the hashtags container to the postContent
+                    $(postContent).append(hashtagsContainer)
+                    //Generate the post date
+                    const postDate = document.createElement('div')
+                    //Populate the post date with the post's date
+                    $(postDate).text(post.date)
+                    //Append the title to the post item
+                    $(postItem).append(postTitle)
+                    //Append the post content to the post item
+                    $(postItem).append(postContent)
+                    //Append the post date to the post item
+                    $(postItem).append(postDate)
+                    //Add the class col to the postItem
+                    $(postItem).addClass('col')
+                    //Append the post to the posts element
+                    $('#posts').append(postItem)
+                })
+            } catch (err) {
+                console.log("Error fetching posts.", err)
+            }
+        }
+        retrievePosts()
+    </script>
+</body>
+</html>
