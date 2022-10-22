@@ -24,55 +24,79 @@
 <script>
 (async function() {
     "use strict";
-    // TODO: Create an AJAX GET request for the file under data/inventory.json
-    let inventory = await $.get('data/inventory.json')
 
-    // TODO: Take the data from inventory.json and append it to the products table
-    //       HINT: Your data should come back as a JSON object; use console.log() to inspect
-    //             its contents and fields
-    //       HINT: You will want to target #insertProducts for your new HTML elements
+    let generateInventoryTable = async () => {
+        // TODO: Create an AJAX GET request for the file under data/inventory.json
+        let inventory = await $.get('data/inventory.json')
 
-    console.log(inventory)
-    let table = document.getElementById('insertProducts')
-    let generateTableRow = (inventory_item) => {
-        //Generate the table row
-        let row = document.createElement('tr')
-        //Generate the title cell
-        let titleCell = document.createElement('td')
-        //Popuate the title cell
-        $(titleCell).text(inventory_item.title)
-        //Generate the quantity cell
-        let quantityCell = document.createElement('td')
-        //Populate the quantity cell
-        $(quantityCell).text(inventory_item.quantity)
-        //Generate the price cell
-        let priceCell = document.createElement('td')
-        //Popuate the price cell
-        $(priceCell).text(`$${inventory_item.price.toFixed(2)}`)
-        //Generate the categories cell
-        let categoriesCell = document.createElement('td')
-        //Generate the categories list
-        let categoriesList = document.createElement('ul')
-        //Iterate through all the categories in the inventory item
-        inventory_item.categories.forEach(category=>{
-            //Generate the category list item
-            let categoryListItem = document.createElement('li')
-            //Populate the category list item
-            $(categoryListItem).text(category)
-            //Append the category list item to the category list
-            $(categoriesList).append(categoryListItem)
+        // TODO: Take the data from inventory.json and append it to the products table
+        //       HINT: Your data should come back as a JSON object; use console.log() to inspect
+        //             its contents and fields
+        //       HINT: You will want to target #insertProducts for your new HTML elements
+
+        //Grab the table
+        let table = document.getElementById('insertProducts')
+
+        //Clear it
+        $(table).html('')
+
+        //Function for generating new rows for the table based on the inventory item object
+        let generateTableRow = (inventory_item) => {
+            //Generate the table row
+            let row = document.createElement('tr')
+            //Generate the title cell
+            let titleCell = document.createElement('td')
+            //Popuate the title cell
+            $(titleCell).text(inventory_item.title)
+            //Generate the quantity cell
+            let quantityCell = document.createElement('td')
+            //Populate the quantity cell
+            $(quantityCell).text(inventory_item.quantity)
+            //Generate the price cell
+            let priceCell = document.createElement('td')
+            //Popuate the price cell
+            $(priceCell).text(`$${inventory_item.price.toFixed(2)}`)
+            //Generate the categories cell
+            let categoriesCell = document.createElement('td')
+            //Generate the categories list
+            let categoriesList = document.createElement('ul')
+            //Iterate through all the categories in the inventory item
+            inventory_item.categories.forEach(category => {
+                //Generate the category list item
+                let categoryListItem = document.createElement('li')
+                //Populate the category list item
+                $(categoryListItem).text(category)
+                //Append the category list item to the category list
+                $(categoriesList).append(categoryListItem)
+            })
+            //Populate the categories cell with the categories list
+            $(categoriesCell).append(categoriesList)
+            //Populate the row with all the cells
+            $(row).append(titleCell, quantityCell, priceCell, categoriesCell)
+            return row
+        }
+        //Generate rows for each inventory item
+        inventory.forEach(item => { //Go through each item
+            let row = generateTableRow(item) //Generate the row for this item
+            $(table).append(row) //And add it to the table
         })
-        //Populate the categories cell with the categories list
-        $(categoriesCell).append(categoriesList)
-        //Populate the row with all the cells
-        $(row).append(titleCell,quantityCell,priceCell,categoriesCell)
-        return row
+
+
+
     }
-    //Generate rows for each inventory item
-    inventory.forEach(item=>{
-        let row = generateTableRow(item)
-        $(table).append(row) //And add them to the table
-    })
+
+    /*
+        Add a "Refresh" button that will load inventory.json for you without having to refresh the entire page.
+     */
+    let refreshButton = document.createElement('button')
+    $(refreshButton).text('Refresh Inventory')
+    $(refreshButton).click(()=>generateInventoryTable())
+
+    $(document.body).append(refreshButton)
+
+    //Initially populate the inventory table
+    generateInventoryTable()
+
 })();
 </script>
 
