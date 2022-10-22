@@ -30,5 +30,25 @@
             "tool"
         ],
         "price": 10
+    },
+    {
+        "title" : "Oscilloscope",
+        "quantity" : 2,
+        "categories" : [
+            "percision measurement",
+            "electronics",
+            "meter"
+        ],
+        "price" : 4000
+    },
+    {
+        "title" : "Multimeter",
+        "quantity" : 5,
+        "categories" : [
+            "percision measurement",
+            "electronics",
+            "meter"
+        ],
+        "price" : 1500
     }
 ]
