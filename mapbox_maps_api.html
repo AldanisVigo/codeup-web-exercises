@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>MapBox Restaurant Display</title>
+      <!--  Generate a Mapbox API Key using the steps from above-->
+      <!--  MAPBOX API KEY: pk.eyJ1IjoiYWxkYW5pc3ZpZ28iLCJhIjoiY2w5a2phcjFnMTdhdDN1dWpybndwMDJndSJ9.52kus1I4BX6Tk5amu87Wdw-->
+      <!-- Mapbox CSS -->
+      <link href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css" rel="stylesheet">
+      <!-- Mapbox JS -->
+      <script src="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js"></script>
+      <!-- Bootstrap CSS -->
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+      <style>
+          /*body { margin: 0; padding: 0; }*/
+          #map {
+              position: absolute;
+              top: 6%;
+              bottom: 0;
+              width: 100%;
+              z-index: -1;
+          }
+
+          @keyframes bounce {
+              from{
+                  position: relative;
+                  top: 0px;
+              }
+
+              to{
+                  position: relative;
+                  top: -20px;
+              }
+          }
+
+          .marker{
+              background-size: cover;
+              width: 50px;
+              height: 50px;
+              border-radius: 50%;
+              cursor: pointer
+          }
+          .steakMarker {
+              background-image: url('/img/mapbox/markers_design/Texas Roadhouse Marker.png');
+          }
+          .chickenMarker {
+              background-image: url('/img/mapbox/markers_design/WingStop Marker.png');
+          }
+          .burgerMarker {
+              background-image: url('/img/mapbox/markers_design/Chillis Marker.png');
+          }
+          .unknownMarker {
+              background-image: url('/img/mapbox/markers_design/Unknown Marker.png');
+          }
+      </style>
+  </head>
+  <body>
+
+    <header>
+      <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Danny's Favorite Restaurants</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav" id="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Categories
+                        </a>
+                        <ul class="dropdown-menu" id="categories"></ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Zoom Levels
+                        </a>
+                        <ul class="dropdown-menu" id="zoomlevels"></ul>
+                    </li>
+                </ul>
+              <form class="d-flex" role="search">
+                  <input class="form-control me-2" type="search" placeholder="Address for new marker" aria-label="Search" id="address_input">
+                  <button class="btn btn-outline-success me-2" type="submit" id="add_marker_btn">Add</button>
+                  <button class="btn btn-outline-success text-nowrap" type="submit" id="hide_all_markers_btn">Hide All</button>
+              </form>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <!-- MAP Element-->
+      <div id="map"></div>
+    </main>
+
+    <!-- Load the `mapbox-gl-geocoder` plugin. -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+
+    <!-- Bootstrap & jQuery-->
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+
+    <!-- Custom JS-->
+    <script>
+      // TODO: Generate a map that shows the city with your favorite restaurant using geocoding.
+
+      //Set the mapbox api access token
+      const accessToken = 'pk.eyJ1IjoiYWxkYW5pc3ZpZ28iLCJhIjoiY2w5a2phcjFnMTdhdDN1dWpybndwMDJndSJ9.52kus1I4BX6Tk5amu87Wdw'
+      mapboxgl.accessToken = accessToken
+      let zoomLevel = 20
+      let mapCenter = [
+          -97.701275,
+          31.08318
+      ]
+      let markers = []
+      let popups = []
+
+      //Generate a new map
+      const map = new mapboxgl.Map({
+        container: 'map', //set the container id
+        style: 'mapbox://styles/mapbox/streets-v11', //set a style
+        center: mapCenter, //set the default center lat lng coordinates
+        zoom: zoomLevel //set the default zoom level
+      })
+
+
+
+      //Geocode function
+      const geocode = (search, token) => {
+          const baseUrl = 'https://api.mapbox.com'
+          const endPoint = '/geocoding/v5/mapbox.places/'
+          return fetch(baseUrl + endPoint + encodeURIComponent(search) + '.json' + "?" + 'access_token=' + token)
+              .then((res) => {
+                  return res.json()
+                  // to get all the data from the request, comment out the following three lines...
+              }).then((data) => {
+                  return data.features[0].center
+              })
+      }
+
+      const generateMarkerPopup = (category) => {
+          //TODO: Info windows can contain basic HTML, not just plain text. Add some additional information about your restaurant to the popup such as why it is your favorite, dishes you like, images, etc.
+
+              //Generate a container div to hold the entire popup content
+          const popupContainer = document.createElement('div')
+
+          //Generate an image element to display the image of the dish in question
+          const categoryImage = document.createElement('img')
+
+          //Set the source to the category's image attribute.
+          $(categoryImage).attr('src',category.image).css({
+              width : '100%'
+          })
+
+          //Generate a heading for the name of the restaurant
+          const categoryRestaurantName = document.createElement('div')
+
+          //Populate the restaurant name field
+          $(categoryRestaurantName).text(category.restaurant_name)
+
+          //Generate a heading for the name of the dish
+          const categoryDishName = document.createElement('div')
+
+          //Populate the dish name heading
+          $(categoryDishName).text(category.dish_name)
+
+          //Generate the price for the name of the dish
+          const categoryDishPrice = document.createElement('div')
+
+          //Populate the dish price
+          $(categoryDishPrice).text(`$${category.dish_price.toFixed(2)}`)
+
+          //Generate a description element
+          const categoryDescription = document.createElement('div')
+
+          //Populate the category description element with the category's description attribute
+          $(categoryDescription).text(category.description)
+
+          //Generate an address field
+          const categoryAddr = document.createElement('div')
+
+          //Populate the address field
+          $(categoryAddr).text(category.address)
+
+          //Put it all together
+          $(popupContainer).append(categoryImage,categoryRestaurantName,categoryDishName,categoryDishPrice,categoryDescription,categoryAddr)
+
+
+          return $(popupContainer).html()
+
+      }
+
+      const placeMarkerAndPopup = (coordinates,category) => {
+          const html = generateMarkerPopup(category)
+          const popup = new mapboxgl.Popup()
+          popup.setHTML(html)
+          $('.mapboxgl-popup').remove()
+          console.log(coordinates)
+
+          const el = document.createElement('div');
+          el.className = category.marker_class
+          el.style.width = `50px`;
+          el.style.height = `100px`;
+          el.style.backgroundSize = '100%';
+
+          el.addEventListener('click', () => {
+            console.log("Clicked on category " + category.category)
+          });
+
+          const marker = new mapboxgl.Marker(el)
+                  .setLngLat(coordinates)
+                  .addTo(map)
+                  .setPopup(popup)
+          $(marker).addClass(category.marker_class)
+          marker.addr = category.address
+          markers.push(marker)
+          popups.push(popup)
+          popup.addTo(map)
+      }
+
+      const placeCategoryMarkers = (categories) => {
+          categories.forEach(async category=>{
+              const latlng = await geocode(category.address,accessToken)
+              placeMarkerAndPopup(latlng,category)
+          })
+      }
+
+
+
+      // placeMarkerAndPopup(favoriteRestaurants[0], accessToken, map);
+
+      // Add the control to the map.
+      map.addControl(
+              new MapboxGeocoder({
+                accessToken: mapboxgl.accessToken,
+                mapboxgl: mapboxgl
+              })
+      )
+
+      //Handle category click
+      const handleCategoryClick = async (category,event) => {
+          //unactivate any previous option
+
+
+          const latlng = await geocode(category.address,accessToken)
+          mapCenter = latlng
+          map.flyTo({
+              center: latlng,
+              essential: true // this animation is considered essential with respect to prefers-reduced-motion
+          });
+      }
+
+      //Populate the categories selector
+      const populateCategoriesDropDown = async () => {
+          try {
+              let categories = await fetch('data/mapboxcategories.json')
+              let categories_json = await categories.json()
+              placeCategoryMarkers(categories_json)
+              categories_json.forEach(category=>{
+                  let categoryItem = document.createElement('li')
+                  $(categoryItem).text(category.category)
+                  $(categoryItem).click((e)=>handleCategoryClick(category,e))
+                  $(categoryItem).addClass('dropdown-item')
+                  $(categoryItem).hover(function (){
+                      $(this).css({cursor:"pointer"})
+                  }, function () {
+                      $(this).css({cursor:"normal"})
+                  })
+                  $('#categories').append(categoryItem)
+              })
+          }catch(err){
+              console.error(err)
+          }
+      }
+
+      // TODO: Add a select input that allows the user to change the zoom level to 5, 15, or 20.
+      //Populaze Zoom Level Dropdown
+      const populateZoomLevelsDropDown = () => {
+          let levels = [5,15,20]
+          levels.forEach(level=>{
+              let levelElement = document.createElement('li')
+              $(levelElement).text(level)
+              $(levelElement).addClass('dropdown-item')
+
+              $(levelElement).click(()=>{
+                  map.jumpTo({
+                      zoom : level
+                  })
+                  zoomLevel = level
+              })
+
+              $('#zoomlevels').append(levelElement)
+          })
+      }
+
+      populateZoomLevelsDropDown()
+      populateCategoriesDropDown()
+      let running = true
+      let animationId = null
+      $('#add_marker_btn').click(async (e)=>{
+          e.preventDefault() //Prevent form from being submitted
+
+          //Grab the address_input field value
+          let addr = $('#address_input').val()
+
+          try{
+              //Geocode the address
+              let latLng = await geocode(addr,accessToken)
+
+              //Move the map to the geocoded latlng position
+              map.jumpTo({
+                  center : latLng
+              })
+
+              const el = document.createElement('div');
+              el.className = 'unknownMarker'
+              el.style.width = `50px`;
+              el.style.height = `100px`;
+              el.style.backgroundSize = '100%';
+
+                  //Create a marker
+                  const marker = new mapboxgl.Marker(el)
+                      .setLngLat(latLng)
+                      .addTo(map)
+
+                  /*
+                         Function to bounce marker up and down
+                  */
+
+
+                  marker.addr = addr
+                  const animateThisMarker = (timestamp) => {
+
+                      let amplitudeLookup = [
+                          {
+                              min : 0,
+                              max : 5,
+                              amplitude : 0.01
+                          },
+                          {
+                              min : 5,
+                              max : 7,
+                              amplitude: 0.001,
+                          },
+                          {
+                              min: 7,
+                              max: 9,
+                              amplitude: 0.0001,
+                          },
+                          {
+                              min: 9,
+                              max : 12,
+                              amplitude: 0.00001,
+                          },
+                          {
+                              min : 12,
+                              max : 15,
+                              amplitude: 0.000001
+                          },
+                          {
+                              min : 15,
+                              max : 23,
+                              amplitude: 0.0000001
+                          }
+                      ]
+
+                      let amplitude = amplitudeLookup.filter(i=>(zoomLevel >= i.min && zoomLevel <= i.max))
+                      // if(amplitude.length == 0){
+                      //     amplitude = 0.0001
+                      // }else{
+                          amplitude = amplitude[0].amplitude * 2
+                      // }
+
+                      console.log(zoomLevel)
+                      console.log(amplitude)
+                      let offset = amplitude * Math.sin(timestamp / 1000)
+                      console.log("Offset: " + offset)
+                      let lng = Number(marker._lngLat.lng)
+                      let lat = Number(marker._lngLat.lat)  + offset
+                      marker.setLngLat([
+                          lng,
+                          lat
+                      ])
+                      if(running) {
+                          animationId = requestAnimationFrame(animateThisMarker)
+                      }
+                  }
+                  animationId = requestAnimationFrame(animateThisMarker)
+
+                  //Stop animation after 2 seconds
+                  // setTimeout(()=>{
+                  //     cancelAnimationFrame(animationId)
+                  // },2000)
+
+
+                  markers.push(marker)
+
+          }catch(err){
+              console.error(err)
+          }
+
+      })
+
+      map.on('zoom',val=>{
+          // console.log(val)
+          zoomLevel = val.target.transform._zoom
+      })
+
+      map.on('zoomstart', e=>{
+          // running = false
+      })
+
+      map.on('zoomend', e=> {
+          //Reset all markers to their original positions, to fix animation diviations caused by zooming
+          markers.forEach(async marker=>{
+              let latLng = await geocode(marker.addr,accessToken)
+              marker.setLngLat(latLng)
+          })
+          //Start the animation again
+          // running = true
+      })
+
+      $('#hide_all_markers_btn').click(e=>{
+          e.preventDefault()
+          markers.forEach(marker=>{
+              marker.remove()
+          })
+      })
+    </script>
+  </body>
+</html>

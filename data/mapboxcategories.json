@@ -1,0 +1,32 @@
+[
+  {
+    "category" : "Best Steak",
+    "dish_name" : "New York Strip",
+    "description" : "This generous 12 oz. cut is aged longer for extra tenderness and flavor. Served with your choice of two sides. Also available in 8 oz. Thick Cut.",
+    "dish_price" : 16.49,
+    "restaurant_name" : "Texas Roadhouse",
+    "address" : "3709 E Central Texas Expy, Killeen, TX 76543",
+    "image" : "img/mapbox/beststeak.jpeg",
+    "marker_class" : "steakMarker"
+  },
+  {
+    "category" : "Best Burger",
+    "dish_name" : "Big Bacon BBQ Burger",
+    "description" : "Two beef patties, six slices of bacon, house BBQ, cheddar, red onion, pickles.",
+    "dish_price"  : 15.99,
+    "restaurant_name" : "Chillis Bar & Grill",
+    "address"  : "2601 E. Central TX Expressway Killeen TX 76543",
+    "image" : "img/mapbox/bestburger.jpg",
+    "marker_class" : "burgerMarker"
+  },
+  {
+    "category" : "Best Chicken Wings",
+    "dish_name" : "ALL-IN BUNDLE",
+    "description" : "16 boneless wings and 6 crispy tenders with up to 4 flavors, large fries, and 3 dips. (Feeds 3-4)",
+    "dish_price" : 22.99,
+    "restaurant_name" : "Wing Stop",
+    "address" : "902 W Central Texas Expy Ste E, Killeen, TX 76541",
+    "image" : "img/mapbox/bestchicken.jpg",
+    "marker_class" : "chickenMarker"
+  }
+]
