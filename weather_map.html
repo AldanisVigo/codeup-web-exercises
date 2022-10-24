@@ -167,6 +167,16 @@
         //Gecode the city's coordinates for the call to openweathermap
         let latLng = await geocode(city,MAPBOX_KEY)
 
+        //Check if the cityMarker has been set
+        if(cityMarker == null) { //If it hasn't been set create one
+            const marker = new mapboxgl.Marker()
+                .setLngLat(latLng) //Set it's position on the map to the latLng
+                .addTo(map) //Add the marker to the map
+            cityMarker = marker //Save a reference for next time we get a five day forecast
+        }else{ //If it already exists, just update it's location
+            cityMarker.setLngLat(latLng)
+        }
+
         //Get the data for the city
         let data = await $.get('http://api.openweathermap.org/data/2.5/forecast', {
             lat : latLng[1],
@@ -277,7 +287,9 @@
     /*
         Initialize Map
      */
+    let cityMarker = null
     const initializeMap = async () => {
+        // As a bonus make sure you can update the marker's position to the new search result.
         await getFiveDayForecast('Killeen,TX')
     }
 
