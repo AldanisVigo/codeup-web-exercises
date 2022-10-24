@@ -4,7 +4,6 @@
       <meta charset="UTF-8">
       <title>MapBox Restaurant Display</title>
       <!--  Generate a Mapbox API Key using the steps from above-->
-      <!--  MAPBOX API KEY: pk.eyJ1IjoiYWxkYW5pc3ZpZ28iLCJhIjoiY2w5a2phcjFnMTdhdDN1dWpybndwMDJndSJ9.52kus1I4BX6Tk5amu87Wdw-->
       <!-- Mapbox CSS -->
       <link href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css" rel="stylesheet">
       <!-- Mapbox JS -->
@@ -97,16 +96,14 @@
     <!-- Bootstrap & jQuery-->
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
-
+    <script src="js/keys.js"></script>
     <!-- Custom JS-->
     <script>
       // TODO: Generate a map that shows the city with your favorite restaurant using geocoding.
 
-      //Set the mapbox api access token
-      const accessToken = 'pk.eyJ1IjoiYWxkYW5pc3ZpZ28iLCJhIjoiY2w5a2phcjFnMTdhdDN1dWpybndwMDJndSJ9.52kus1I4BX6Tk5amu87Wdw'
-
+      console.log(MAPBOX_KEY)
       //Set the mapboxgl api access token
-      mapboxgl.accessToken = accessToken
+      mapboxgl.accessToken = MAPBOX_KEY
 
       //Default zoom level for map
       let zoomLevel = 20
@@ -257,7 +254,7 @@
       const placeCategoryMarkers = (categories) => {
           categories.forEach(async category=>{ //Iterate through each category passed in
               //Geocode the coordinates of the category's address
-              const latlng = await geocode(category.address,accessToken)
+              const latlng = await geocode(category.address,MAPBOX_KEY)
 
               //Place the marker and popup for the current category
               placeMarkerAndPopup(latlng,category)
@@ -275,7 +272,7 @@
       //Handle category click
       const handleCategoryClick = async (category,event) => {
           //Gecode the latitude and longitude location of the clicked category
-          const latlng = await geocode(category.address,accessToken)
+          const latlng = await geocode(category.address,MAPBOX_KEY)
 
           //Set the global map center variable to the geocoded value
           mapCenter = latlng
@@ -378,7 +375,7 @@
 
           try{
               //Geocode the address
-              let latLng = await geocode(addr,accessToken)
+              let latLng = await geocode(addr,MAPBOX_KEY)
 
               //Move the map to the geocoded latlng position
               map.jumpTo({
@@ -491,7 +488,7 @@
       map.on('zoomend', e=> {
           //Reset all markers to their original positions, to fix animation deviations caused by zooming
           markers.forEach(async marker=>{ //Iterate through all the markers
-              let latLng = await geocode(marker.addr,accessToken) //Geocode their addr attribute value to get a latitude and longitude
+              let latLng = await geocode(marker.addr,MAPBOX_KEY) //Geocode their addr attribute value to get a latitude and longitude
               marker.setLngLat(latLng) //Set the latlng to of the marker to the geocoded value
           })
       })

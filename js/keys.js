@@ -1,0 +1,2 @@
+const OPEN_WEATHER_APPID = 'a94981e5e0455d5bde3cbf079979c87e'
+const MAPBOX_KEY = 'pk.eyJ1IjoiYWxkYW5pc3ZpZ28iLCJhIjoiY2w5a2phcjFnMTdhdDN1dWpybndwMDJndSJ9.52kus1I4BX6Tk5amu87Wdw'
