@@ -15,41 +15,85 @@
       body {
           margin: 0;
           padding: 0;
+          margin-top: 100px;
+          background-image: url('/img/weatherbg.jpeg');
+          background-attachment: fixed;
+          background-size: cover;
+
+      }
+
+      .header{
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          z-index: 100000;
+          border-bottom-left-radius: 20px !important;
+          border-bottom-right-radius: 20px !important;
+          box-shadow: 0px 0px 10px black;
       }
       #map {
-          position: absolute;
-          top: 5.7%;
-          left: 50%;
-          bottom: 0;
-          width: 50%;
-          z-index: -1;
+          /*position: absolute;*/
+          /*top: 5.7%;*/
+          /*left: 50%;*/
+          /*bottom: 0;*/
+          height: calc(50vh - 100px);
+          z-index: 1;
+          background: black;
+          border-radius: 10px;
+          box-shadow: 0px 0px 10px black;
       }
+
+      .weather_info_container{
+          background: rgba(255,255,255,0.9);
+          margin-top: 20px;
+          border-radius: 10px;
+          padding: 10px;
+          margin-bottom: 20px;
+          box-shadow: 0px 0px 10px black;
+      }
+
+      #weather_info{
+          /*max-height: calc(100vh - 150px);*/
+          overflow-y: scroll !important;
+          z-index: 1;
+      }
+
     </style>
     <title>Weather Map</title>
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-lg bg-light">
+    <nav class="navbar navbar-expand-lg bg-light header">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Weather Map</a>
+            <a class="navbar-brand" href="#">Danny's Weather Map</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav" id="navbar-nav">
-                </ul>
+                <div class="container-fluid mt-3">
+                    <form class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search City" aria-label="Search" id="search_input">
+                        <button class="btn btn-outline-success text-nowrap" type="submit" id="search_button">Get Forecast</button>
+                    </form>
+                </div>
             </div>
         </div>
     </nav>
 </header>
-<main>
     <!-- MAP Element-->
-    <div id="container">
-        <h3>Forecast for <span id="city_name">City Name</span></h3>
-        <div id="weather_info" style="overflow-y: scroll;max-height: calc(100vh - 100px);"></div>
+    <div class="container">
+        <div id="map" class="row"></div>
+
+        <div class="row">
+            <div class="col d-block w-50 weather_info_container">
+                <h3>5 Day Forecast for <span id="city_name">City Name</span></h3>
+                <div id="weather_info" class="row overflow-auto">
+
+                </div>
+            </div>
+        </div>
     </div>
-    <div id="map"></div>
-</main>
 
 <!-- Load the `mapbox-gl-geocoder` plugin. -->
 <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
@@ -106,22 +150,24 @@
     /*
         Function retrieves weateher data from openweathermap api
      */
-    const getWeatherData = async (city) => {
-        const data = await $.get("http://api.openweathermap.org/data/2.5/weather", {
-            APPID: OPEN_WEATHER_APPID,
-            q: city
-        })
-        console.log(data)
-        $('#city_name').text(data.name)
-        return data
-    }
+    // const getWeatherData = async (city) => {
+    //     const data = await $.get("http://api.openweathermap.org/data/2.5/weather", {
+    //         APPID: OPEN_WEATHER_APPID,
+    //         q: city
+    //     })
+    //     console.log(data)
+    //     $('#city_name').text(data.name)
+    //     return data
+    // }
 
     /*
         Function retrieves 5 day weather forecast from location
      */
     const getFiveDayForecast = async (city) => {
+        //Gecode the city's coordinates for the call to openweathermap
         let latLng = await geocode(city,MAPBOX_KEY)
-        console.log(latLng)
+
+        //Get the data for the city
         let data = await $.get('http://api.openweathermap.org/data/2.5/forecast', {
             lat : latLng[1],
             lon : latLng[0],
@@ -131,6 +177,9 @@
 
         //Clear whatever may be inside the weather info container
         $('#weather_info').html('')
+
+        //Set the text for the city name label
+        $('#city_name').text(data.city.name)
 
         //Iterate through each forecast item
         data.list.forEach(item=>{
@@ -148,7 +197,6 @@
 
             //Append the date field to the item container
             $(itemContainer).append(dateTime)
-
 
             //Generate the low and high temperatures view
             const lowHigh = document.createElement('div')
@@ -197,22 +245,45 @@
             //Append the image to the item container
             $(itemContainer).append(itemImage)
 
-
             //Append the item container to the weather info
             $('#weather_info').append(itemContainer)
+
+            //Set the map's center to coordinates of the city
+            map.flyTo({
+                center: latLng,
+                zoom: 10
+            })
         })
+
+        //Return the data
         return data
     }
 
-    const getKilleenTxWeatherData = async () => {
-        const weatherData = await getWeatherData('Killeen, TX, US')
-        console.log(weatherData)
 
-        const forecastData = await getFiveDayForecast('Killeen, TX, US')
-        console.log(forecastData)
+    /*
+        Handle when the user clicks the get forecast button
+     */
+    $('#search_button').click(async (e)=>{
+        //Prevent the form from submitting
+        e.preventDefault()
+
+        //Get the value of the place they want the forecast for
+        let place = $('#search_input').val()
+
+        //Get the five day forecast for the searched place
+        await getFiveDayForecast(place)
+    })
+
+    /*
+        Initialize Map
+     */
+    const initializeMap = async () => {
+        await getFiveDayForecast('Killeen,TX')
     }
 
-    getKilleenTxWeatherData()
+    //Initialize the map
+    initializeMap()
+
   </script>
 </body>
 </html>
