@@ -107,12 +107,20 @@
 
       //Set the mapbox api access token
       const accessToken = 'pk.eyJ1IjoiYWxkYW5pc3ZpZ28iLCJhIjoiY2w5a2phcjFnMTdhdDN1dWpybndwMDJndSJ9.52kus1I4BX6Tk5amu87Wdw'
+
+      //Set the mapboxgl api access token
       mapboxgl.accessToken = accessToken
+
+      //Default zoom level for map
       let zoomLevel = 20
+
+      //Default map center coordinates
       let mapCenter = [
           -97.701275,
           31.08318
       ]
+
+      //Lists to keep track of markers and popups in the map
       let markers = []
       let popups = []
 
@@ -139,6 +147,9 @@
               })
       }
 
+      /*
+        Generates the popup inner element with all the information about the passed category.
+       */
       const generateMarkerPopup = (category) => {
           //TODO: Info windows can contain basic HTML, not just plain text. Add some additional information about your restaurant to the popup such as why it is your favorite, dishes you like, images, etc.
 
@@ -186,49 +197,75 @@
           //Put it all together
           $(popupContainer).append(categoryImage,categoryRestaurantName,categoryDishName,categoryDishPrice,categoryDescription,categoryAddr)
 
-
+          //Return the HTML of the popup container we just made
           return $(popupContainer).html()
 
       }
 
+      /*
+        Places a marker and a popup for a single category at the passed coordinates on the map
+       */
       const placeMarkerAndPopup = (coordinates,category) => {
+          //Generate the popup element for the category
           const html = generateMarkerPopup(category)
+
+          //Create a new popup
           const popup = new mapboxgl.Popup()
+
+          //Set it's HTML to the popup element we just generated
           popup.setHTML(html)
-          $('.mapboxgl-popup').remove()
-          console.log(coordinates)
 
-          const el = document.createElement('div');
+          //Create an element for the maker
+          const el = document.createElement('div')
+          //Set the class of the element so the marker image matches the category
           el.className = category.marker_class
-          el.style.width = `50px`;
-          el.style.height = `100px`;
-          el.style.backgroundSize = '100%';
 
+          //Set the width and height
+          el.style.width = `50px`
+          el.style.height = `100px`
+
+          //Make the background image fill the marker
+          el.style.backgroundSize = '100%'
+
+          //Add a click event handler to the marker
           el.addEventListener('click', () => {
-            console.log("Clicked on category " + category.category)
-          });
+            console.log("Clicked on category " + category.category) //Display which category we clicked on in the console
+          })
 
+          //Create a new marker for the current category using the element we created
           const marker = new mapboxgl.Marker(el)
-                  .setLngLat(coordinates)
-                  .addTo(map)
-                  .setPopup(popup)
-          $(marker).addClass(category.marker_class)
+                  .setLngLat(coordinates) //Set it's position on the map to the passed coordinates
+                  .addTo(map) //Add the marker to the map
+                  .setPopup(popup) //Set the marker's popup to the one we just created
+
+          //Store the address of the category in an addr attribute within the marker so we can reset it's position once we finish zooming
           marker.addr = category.address
+
+          //Add the marker to the list of available markers
           markers.push(marker)
+
+          //Add the popup to the list of available popups
           popups.push(popup)
+
+          //Add the popup to the map
           popup.addTo(map)
+
+          //Remove the popup from the map immediately to hide it until user clicks on the marker
+          $('.mapboxgl-popup').remove()
       }
 
+      /*
+        Place a marker with a popup for the passed category objects
+       */
       const placeCategoryMarkers = (categories) => {
-          categories.forEach(async category=>{
+          categories.forEach(async category=>{ //Iterate through each category passed in
+              //Geocode the coordinates of the category's address
               const latlng = await geocode(category.address,accessToken)
+
+              //Place the marker and popup for the current category
               placeMarkerAndPopup(latlng,category)
           })
       }
-
-
-
-      // placeMarkerAndPopup(favoriteRestaurants[0], accessToken, map);
 
       // Add the control to the map.
       map.addControl(
@@ -240,11 +277,13 @@
 
       //Handle category click
       const handleCategoryClick = async (category,event) => {
-          //unactivate any previous option
-
-
+          //Gecode the latitude and longitude location of the clicked category
           const latlng = await geocode(category.address,accessToken)
+
+          //Set the global map center variable to the geocoded value
           mapCenter = latlng
+
+          //Fly the map to the geocoded coordinates
           map.flyTo({
               center: latlng,
               essential: true // this animation is considered essential with respect to prefers-reduced-motion
@@ -253,20 +292,38 @@
 
       //Populate the categories selector
       const populateCategoriesDropDown = async () => {
-          try {
+          try { //Attempt to
+              //Fetch the categories from the json file
               let categories = await fetch('data/mapboxcategories.json')
+
+              //Get the json object with the data
               let categories_json = await categories.json()
+
+              //Place the markers for each category on the map
               placeCategoryMarkers(categories_json)
+
+              //Iterate through each category
               categories_json.forEach(category=>{
+                  //Create a list item for the current category item
                   let categoryItem = document.createElement('li')
+
+                  //Set the text for the list item to the name of the category
                   $(categoryItem).text(category.category)
+
+                  //Add a click handler to the list item
                   $(categoryItem).click((e)=>handleCategoryClick(category,e))
+
+                  //Add the dropdown-item class to the list item for bootstrap styling
                   $(categoryItem).addClass('dropdown-item')
+
+                  //Add a hover handler to change the cursor to a pointer when the user interacts with it
                   $(categoryItem).hover(function (){
                       $(this).css({cursor:"pointer"})
                   }, function () {
                       $(this).css({cursor:"normal"})
                   })
+
+                  //Append the list item to the categories ul
                   $('#categories').append(categoryItem)
               })
           }catch(err){
@@ -277,27 +334,45 @@
       // TODO: Add a select input that allows the user to change the zoom level to 5, 15, or 20.
       //Populaze Zoom Level Dropdown
       const populateZoomLevelsDropDown = () => {
+
+          //Available zoom levels
           let levels = [5,15,20]
+
+          //Iterate through all available zoom levels
           levels.forEach(level=>{
+              //Create a new li element for the current zoom level
               let levelElement = document.createElement('li')
+
+              //Set the text to the zoom level number
               $(levelElement).text(level)
+
+              //Add the bootstrap dropdown-item class to the li element for styling
               $(levelElement).addClass('dropdown-item')
 
-              $(levelElement).click(()=>{
-                  map.jumpTo({
+              //Add a click event handler to the li element
+              $(levelElement).click(()=>{ //When clicked
+                  map.jumpTo({ //Jump the map to the selected zoom level
                       zoom : level
                   })
-                  zoomLevel = level
+                  zoomLevel = level //And set the zoom level globally
               })
 
+              //Append the li element to the zoomLevels ul
               $('#zoomlevels').append(levelElement)
           })
       }
 
+      //Populate the zoom level dropdown on the navbar
       populateZoomLevelsDropDown()
+
+      //Populate the categories dropdown on the navbar
       populateCategoriesDropDown()
+
+      //Variables to keep track of the marker's bounce animation
       let running = true
       let animationId = null
+
+      //When the add marker button is pressed
       $('#add_marker_btn').click(async (e)=>{
           e.preventDefault() //Prevent form from being submitted
 
@@ -313,25 +388,26 @@
                   center : latLng
               })
 
+              //Create an element for the marker
               const el = document.createElement('div');
+              // with the correct class so that the marker is assigned the correct image
               el.className = 'unknownMarker'
+              //And size
               el.style.width = `50px`;
               el.style.height = `100px`;
+              //And set the background size to fill
               el.style.backgroundSize = '100%';
 
                   //Create a marker
                   const marker = new mapboxgl.Marker(el)
-                      .setLngLat(latLng)
-                      .addTo(map)
+                      .setLngLat(latLng) //Set the marker's position on the map
+                      .addTo(map) //And add it to the map
 
-                  /*
-                         Function to bounce marker up and down
-                  */
-
-
+                  //Set the addr attribute on the marker object so we can have a way to geocode the latLng when we finish zooming and reset the marker's position
                   marker.addr = addr
-                  const animateThisMarker = (timestamp) => {
 
+                  const animateThisMarker = (timestamp) => {
+                      //Lookup table for the amplitude value based on zoomLevel
                       let amplitudeLookup = [
                           {
                               min : 0,
@@ -365,66 +441,69 @@
                           }
                       ]
 
+                      //Use the lookup table to figure out the amplitude for the current zoom level
                       let amplitude = amplitudeLookup.filter(i=>(zoomLevel >= i.min && zoomLevel <= i.max))
-                      // if(amplitude.length == 0){
-                      //     amplitude = 0.0001
-                      // }else{
-                          amplitude = amplitude[0].amplitude * 2
-                      // }
 
-                      console.log(zoomLevel)
-                      console.log(amplitude)
+                      //Multiplyer for the amplitude
+                      let amplitudeMultiplyer = 2
+
+                      //Calculate the amplitude by multiplying it with the amplitude multiplier
+                      amplitude = amplitude[0].amplitude * amplitudeMultiplyer
+
+
+                      //Calculate the offset
                       let offset = amplitude * Math.sin(timestamp / 1000)
-                      console.log("Offset: " + offset)
+
+                      //Get the new latitude and longitudes
                       let lng = Number(marker._lngLat.lng)
                       let lat = Number(marker._lngLat.lat)  + offset
+
+                      //Assign them to the marker
                       marker.setLngLat([
                           lng,
                           lat
                       ])
+
+                      //If the animation is running, request another frame
                       if(running) {
                           animationId = requestAnimationFrame(animateThisMarker)
                       }
                   }
+
+                  //Kick off the marker animation
                   animationId = requestAnimationFrame(animateThisMarker)
 
-                  //Stop animation after 2 seconds
-                  // setTimeout(()=>{
-                  //     cancelAnimationFrame(animationId)
-                  // },2000)
+                  // Stop animation after 10 seconds, 2 seconds is too little to see it go
+                  setTimeout(()=>{
+                      cancelAnimationFrame(animationId) //Stop the marker animation
+                  },10000)
 
-
+                  // Add the marker to our list of markers
                   markers.push(marker)
 
           }catch(err){
               console.error(err)
           }
-
       })
 
       map.on('zoom',val=>{
-          // console.log(val)
+          //Set the zoom level
           zoomLevel = val.target.transform._zoom
       })
 
-      map.on('zoomstart', e=>{
-          // running = false
-      })
-
       map.on('zoomend', e=> {
-          //Reset all markers to their original positions, to fix animation diviations caused by zooming
-          markers.forEach(async marker=>{
-              let latLng = await geocode(marker.addr,accessToken)
-              marker.setLngLat(latLng)
+          //Reset all markers to their original positions, to fix animation deviations caused by zooming
+          markers.forEach(async marker=>{ //Iterate through all the markers
+              let latLng = await geocode(marker.addr,accessToken) //Geocode their addr attribute value to get a latitude and longitude
+              marker.setLngLat(latLng) //Set the latlng to of the marker to the geocoded value
           })
-          //Start the animation again
-          // running = true
       })
 
+      //When the hide all markers button is clicked
       $('#hide_all_markers_btn').click(e=>{
-          e.preventDefault()
-          markers.forEach(marker=>{
-              marker.remove()
+          e.preventDefault() //Prevent the form from being submitted and page reloaded
+          markers.forEach(marker=>{ //Iterate through all the available markers
+              marker.remove() //And remove them from the map
           })
       })
     </script>
