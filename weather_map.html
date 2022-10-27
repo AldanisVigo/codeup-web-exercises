@@ -22,7 +22,6 @@
           background-image: url('/img/weatherbg.jpeg');
           background-attachment: fixed;
           background-size: cover;
-
       }
 
       .header{
@@ -57,6 +56,26 @@
           /*max-height: calc(100vh - 150px);*/
           overflow-y: scroll !important;
           z-index: 1;
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr 1fr;
+          grid-tempalte-rows: auto;
+      }
+
+      @media only screen and (max-width: 992px){
+          #weather_info{
+              grid-template-columns: auto;
+              grid-template-rows: auto;
+          }
+      }
+
+      @keyframes glow {
+          from {
+              transform: scale(1)
+          }
+
+          to {
+              transform: scale(1.1)
+          }
       }
     </style>
 
@@ -191,43 +210,44 @@
         //Set the text for the city name label
         $('#city_name').text(data.city.name)
 
+        //Map from icon code to icon url
+        const weatherIconMap = {
+            '01d' : '/img/weathericons/day.svg', //Clear Day
+            '01n' : '/img/weathericons/night.svg', //Clear Night
+            '02d' : '/img/weathericons/cloudy-day-3.svg', //Few Clouds Day
+            '02n' : '/img/weathericons/cloudy-night-3.svg', //Few Clouds Night
+            '03d' : '/img/weathericons/cloudy-day-3.svg', //Scattered clouds
+            '03n' : '/img/weathericons/cloudy-night-3.svg', //Scattered clouds
+            '04d' : '/img/weathericons/cloudy.svg', //Broken Clouds
+            '04n' : '/img/weathericons/cloudy.svg', //Broken Clouds
+            '09d' : '/img/weathericons/rainy-7.svg', //Shower Rain Day
+            '09n' : '/img/weathericons/rainy-7.svg', //Shower Rain Night
+            '10d' : '/img/weathericons/rainy-1.svg', //Rainy Day
+            '10n' : '/img/weathericons/rainy-7.svg', //Rainy Night
+            '11d' : '/img/weathericons/thunder.svg', //Thunderstorm day
+            '11n' : '/img/weathericons/thunder.svg', //Thundersorms night
+            '13d' : '/img/weathericons/snowy-1.svg', //Snowy day
+            '13n' : '/img/weathericons/snowy-6.svg', //Snowy night
+            '50d' : 'http://openweathermap.org/img/wn/50d@2x.png', //Misty day
+            '50n' : 'http://openweathermap.org/img/wn/50n@2x.png' //Misty night
+        }
+
         //Iterate through each forecast item
         data.list.forEach(item=>{
             //Create a container for the current forecast item
             const itemContainer = document.createElement('div')
 
             //Give the container a class of row for bootstrap styling
-            $(itemContainer).addClass('row')
+            $(itemContainer).addClass('row').addClass('mt-5').addClass('d-flex flex-col')
 
             //Create the date field
             const dateTime = document.createElement('div')
 
             //Set the text of the date field
-            $(dateTime).text(item.dt_txt)
+            $(dateTime).text(item.dt_txt).addClass('h4')
 
             //Append the date field to the item container
             $(itemContainer).append(dateTime)
-
-            //Generate the low and high temperatures view
-            const lowHigh = document.createElement('div')
-            $(lowHigh).text(`Low: ${item.main.temp_min}˚F | High: ${item.main.temp_max}˚F`)
-
-            //Add them to the item container
-            $(itemContainer).append(lowHigh)
-
-            //Generate the Humidity view
-            const humidity = document.createElement('div')
-            $(humidity).text(`Humidity: ${item.main.humidity}`)
-
-            //Add the humidity view to the item container
-            $(itemContainer).append(humidity)
-
-            //Generate the windage container
-            const windage = document.createElement('div')
-            $(windage).text(`Direction: ${item.wind.deg}˚ Gust: ${item.wind.gust}mph Speed: ${item.wind.speed}mph`)
-
-            //Add the windage view to the item container
-            $(itemContainer).append(windage)
 
             //Generate an image for the clouds
             const itemImage = document.createElement('img')
@@ -235,28 +255,62 @@
                 width : '80px',
                 height : '50px'
             })
-
-            //Generate the pressure view
-            const pressure = document.createElement('div')
-            $(pressure).text(`Pressure: ${item.main.pressure}`)
-
-            //Add it to the item container
-            $(itemContainer).append(pressure)
-
             //Get the icon code
             const icon = item.weather[0].icon
 
+            // console.log(weatherConditionsClassLookup[item.weather[0].id])
+            // $(itemContainer).append(item.weather[0].id)
+
             //Slap together the URL for the image src
-            const url = `http://openweathermap.org/img/wn/${encodeURIComponent(icon)}@2x.png`
+            // const url = `http://openweathermap.org/img/wn/${encodeURIComponent(icon)}@2x.png`
+            const url = weatherIconMap[icon]
 
             //Set the src attribute of the image to the url
             $(itemImage).attr('src',url)
+            $(itemImage).css({
+                width: '200px',
+                height: '200px',
+                margin: 'auto',
+                animation : 'glow 1s linear 1s infinite alternate'
+            })
 
             //Append the image to the item container
             $(itemContainer).append(itemImage)
 
+
+            //Generate the low and high temperatures view
+            const lowHigh = document.createElement('div')
+            $(lowHigh).html(`<strong>Low:</strong> ${item.main.temp_min}˚F | <strong>High:</strong> ${item.main.temp_max}˚F`).addClass('text-nowrap')
+
+            //Add them to the item container
+            $(itemContainer).append(lowHigh)
+
+            //Generate the Humidity view
+            const humidity = document.createElement('div')
+            $(humidity).html(`<strong>Humidity:</strong> ${item.main.humidity}`)
+
+            //Add the humidity view to the item container
+            $(itemContainer).append(humidity)
+
+            //Generate the windage container
+            const windage = document.createElement('div')
+            $(windage).html(`<strong>Direction:</strong> ${item.wind.deg}˚ <br><strong>Gust:</strong> ${item.wind.gust}mph <br><strong>Speed:</strong> ${item.wind.speed}mph`)
+
+            //Add the windage view to the item container
+            $(itemContainer).append(windage)
+
+
+
+            //Generate the pressure view
+            const pressure = document.createElement('div')
+            $(pressure).html(`<strong>Pressure:</strong> ${item.main.pressure}`)
+
+            //Add it to the item container
+            $(itemContainer).append(pressure)
+
+
             //Append the item container to the weather info
-            $('#weather_info').append(itemContainer)
+            $('#weather_info').append(itemContainer).addClass('text-center justify-content-center')
 
             //Set the map's center to coordinates of the city
             map.flyTo({
