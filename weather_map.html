@@ -15,14 +15,20 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 
+    <!-- Basic Styling -->
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rubik+Moonrocks&display=swap');
       body {
           padding: 0;
           margin: 100px 0 0;
-          background-image: url('/img/weatherbg.jpeg');
+          background-image: url('/img/weathercow.gif');
           background-attachment: fixed;
-          background-size: cover;
+          background-size: 100% 50%;
+          background-repeat: no-repeat;
+          background-position: bottom center;
       }
+
+
 
       .header{
           position: fixed;
@@ -32,7 +38,25 @@
           z-index: 100000;
           border-bottom-left-radius: 20px !important;
           border-bottom-right-radius: 20px !important;
-          box-shadow: 0px 0px 10px black;
+          box-shadow: 0px 0px 10px white;
+      }
+
+      .app-icon{
+          position: relative;
+          top: -9px;
+          filter: drop-shadow(0 0 0.2rem blue);
+      }
+
+      .app-title{
+          font-family: 'Rubik Moonrocks';
+          position: relative;
+          top: 5px;
+          filter: drop-shadow(0 0 0.1rem blue);
+      }
+
+      .search-form{
+          position: relative;
+          top: -5px;
       }
 
       #map {
@@ -41,6 +65,10 @@
           background: black;
           border-radius: 10px;
           box-shadow: 0px 0px 10px black;
+          margin-left: 4px;
+          margin-right: 5px;
+          box-shadow: 0px 0px 10px white;
+
       }
 
       .weather_info_container{
@@ -49,7 +77,9 @@
           border-radius: 10px;
           padding: 10px;
           margin-bottom: 20px;
-          box-shadow: 0px 0px 10px black;
+          box-shadow: 0px 0px 10px white;
+          margin-left: 4px;
+          margin-right: 4px;
       }
 
       #weather_info{
@@ -59,12 +89,20 @@
           display: grid;
           grid-template-columns: 1fr 1fr 1fr 1fr;
           grid-tempalte-rows: auto;
+          margin-right: 4px;
+          margin-left: 4px;
       }
 
       @media only screen and (max-width: 992px){
           #weather_info{
               grid-template-columns: auto;
               grid-template-rows: auto;
+          }
+      }
+
+      @media only screen and (min-width: 600px){
+          body {
+              background-size: cover;
           }
       }
 
@@ -82,31 +120,40 @@
     <title>Weather Map</title>
 </head>
 <body>
-<header>
-    <nav class="navbar navbar-expand-lg bg-light header">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Danny's Weather Map</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <div class="container-fluid mt-3">
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search City" aria-label="Search" id="search_input">
-                        <button class="btn btn-outline-success text-nowrap" type="submit" id="search_button">Get Forecast</button>
-                    </form>
+    <header>
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg bg-light header">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#"><img src="img/mapbox/logo.png" width="60px" height="50px" class="me-2 app-icon"/><span class="app-title display-6">Weather Moo</span></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <div class="container-fluid mt-3">
+                        <form class="d-flex search-form" role="search">
+                            <input class="form-control me-2" type="search" placeholder="Search City" aria-label="Search" id="search_input">
+                            <button class="btn btn-outline-success text-nowrap" type="submit" id="search_button">Get Forecast</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    </nav>
-</header>
+        </nav>
+    </header>
     <!-- MAP Element-->
     <div class="container">
         <div id="map" class="row"></div>
 
         <div class="row">
             <div class="col d-block w-50 weather_info_container">
-                <h3>5 Day Forecast for <span id="city_name">City Name</span></h3>
+                <h3>Moo's 5 Day Forecast - <span id="city_name">City Name</span></h3>
+                <div class="row">
+                    <div class="col d-flex justify-content-center">
+                        <button class="btn btn-primary" id="full-day-forecast">3:00 PM Forecast</button>
+                    </div>
+                    <div class="col d-flex justify-content-center">
+                        <button class="btn btn-primary" id="every-three-hours-forecast">Full Forecast</button>
+                    </div>
+                </div>
                 <div id="weather_info" class="row overflow-auto">
 
                 </div>
@@ -114,242 +161,278 @@
         </div>
     </div>
 
-<!-- Load the `mapbox-gl-geocoder` plugin. -->
-<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
-<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+    <!-- Load the `mapbox-gl-geocoder` plugin. -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
 
-<!-- Bootstrap & jQuery-->
-<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    <!-- Bootstrap & jQuery-->
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 
-<!-- Keys -->
-<script src="js/keys.js"></script>
+    <!-- Keys -->
+    <script src="js/keys.js"></script>
 
-<!-- Custom JS-->
-<script>
-    //Set the mapboxgl api access token
-    mapboxgl.accessToken = MAPBOX_KEY
+    <!-- Moment.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.js"></script>
 
-    //Default zoom level for map
-    let zoomLevel = 20
+    <!-- Custom JS-->
+    <script>
+        //Set the mapboxgl api access token
+        mapboxgl.accessToken = MAPBOX_KEY
 
-    //Default map center coordinates
-    let mapCenter = [
-        -97.701275,
-        31.08318
-    ]
+        //Default zoom level for map
+        let zoomLevel = 20
 
-    //Lists to keep track of markers and popups in the map
-    let markers = []
-    let popups = []
+        //Default map center coordinates
+        let mapCenter = [
+            -97.701275,
+            31.08318
+        ]
 
-    //Generate a new map
-    const map = new mapboxgl.Map({
-        container: 'map', //set the container id
-        style: 'mapbox://styles/mapbox/streets-v11', //set a style
-        center: mapCenter, //set the default center lat lng coordinates
-        zoom: zoomLevel //set the default zoom level
-    })
+        //Lists to keep track of markers and popups in the map
+        // let markers = []
+        // let popups = []
 
-
-
-    //Geocode function
-    const geocode = (search, token) => {
-        const baseUrl = 'https://api.mapbox.com'
-        const endPoint = '/geocoding/v5/mapbox.places/'
-        return fetch(baseUrl + endPoint + encodeURIComponent(search) + '.json' + "?" + 'access_token=' + token)
-            .then((res) => {
-                return res.json()
-                // to get all the data from the request, comment out the following three lines...
-            }).then((data) => {
-                return data.features[0].center
-            })
-    }
-
-    /*
-        Function retrieves weateher data from openweathermap api
-     */
-    // const getWeatherData = async (city) => {
-    //     const data = await $.get("http://api.openweathermap.org/data/2.5/weather", {
-    //         APPID: OPEN_WEATHER_APPID,
-    //         q: city
-    //     })
-    //     console.log(data)
-    //     $('#city_name').text(data.name)
-    //     return data
-    // }
-
-    /*
-        Function retrieves 5 day weather forecast from location
-     */
-    const getFiveDayForecast = async (city) => {
-        //Gecode the city's coordinates for the call to openweathermap
-        let latLng = await geocode(city,MAPBOX_KEY)
-
-        //Check if the cityMarker has been set
-        if(cityMarker == null) { //If it hasn't been set create one
-            const marker = new mapboxgl.Marker()
-                .setLngLat(latLng) //Set it's position on the map to the latLng
-                .addTo(map) //Add the marker to the map
-            cityMarker = marker //Save a reference for next time we get a five day forecast
-        }else{ //If it already exists, just update it's location
-            cityMarker.setLngLat(latLng)
-        }
-
-        //Get the data for the city
-        let data = await $.get('http://api.openweathermap.org/data/2.5/forecast', {
-            lat : latLng[1],
-            lon : latLng[0],
-            APPID: OPEN_WEATHER_APPID,
-            units : 'imperial'
+        //Generate a new map
+        const map = new mapboxgl.Map({
+            container: 'map', //set the container id
+            style: 'mapbox://styles/aldanisvigo/cl9t5yxbm003e15o2lfuc051q', //set a style
+            center: mapCenter, //set the default center lat lng coordinates
+            zoom: zoomLevel //set the default zoom level
         })
 
-        //Clear whatever may be inside the weather info container
-        $('#weather_info').html('')
-
-        //Set the text for the city name label
-        $('#city_name').text(data.city.name)
-
-        //Map from icon code to icon url
-        const weatherIconMap = {
-            '01d' : '/img/weathericons/day.svg', //Clear Day
-            '01n' : '/img/weathericons/night.svg', //Clear Night
-            '02d' : '/img/weathericons/cloudy-day-3.svg', //Few Clouds Day
-            '02n' : '/img/weathericons/cloudy-night-3.svg', //Few Clouds Night
-            '03d' : '/img/weathericons/cloudy-day-3.svg', //Scattered clouds
-            '03n' : '/img/weathericons/cloudy-night-3.svg', //Scattered clouds
-            '04d' : '/img/weathericons/cloudy.svg', //Broken Clouds
-            '04n' : '/img/weathericons/cloudy.svg', //Broken Clouds
-            '09d' : '/img/weathericons/rainy-7.svg', //Shower Rain Day
-            '09n' : '/img/weathericons/rainy-7.svg', //Shower Rain Night
-            '10d' : '/img/weathericons/rainy-1.svg', //Rainy Day
-            '10n' : '/img/weathericons/rainy-7.svg', //Rainy Night
-            '11d' : '/img/weathericons/thunder.svg', //Thunderstorm day
-            '11n' : '/img/weathericons/thunder.svg', //Thundersorms night
-            '13d' : '/img/weathericons/snowy-1.svg', //Snowy day
-            '13n' : '/img/weathericons/snowy-6.svg', //Snowy night
-            '50d' : 'http://openweathermap.org/img/wn/50d@2x.png', //Misty day
-            '50n' : 'http://openweathermap.org/img/wn/50n@2x.png' //Misty night
+        //Geocode function
+        const geocode = (search, token) => {
+            const baseUrl = 'https://api.mapbox.com'
+            const endPoint = '/geocoding/v5/mapbox.places/'
+            return fetch(baseUrl + endPoint + encodeURIComponent(search) + '.json' + "?" + 'access_token=' + token)
+                .then((res) => {
+                    return res.json()
+                    // to get all the data from the request, comment out the following three lines...
+                }).then((data) => {
+                    return data.features[0].center
+                })
         }
 
-        //Iterate through each forecast item
-        data.list.forEach(item=>{
-            //Create a container for the current forecast item
-            const itemContainer = document.createElement('div')
+        /*
+            Function retrieves 5 day weather forecast from location
+         */
+        const getFiveDayForecast = async (city) => {
+            //Gecode the city's coordinates for the call to openweathermap
+            let latLng = await geocode(city,MAPBOX_KEY)
 
-            //Give the container a class of row for bootstrap styling
-            $(itemContainer).addClass('row').addClass('mt-5').addClass('d-flex flex-col')
+            //Check if the cityMarker has been set
+            if(cityMarker == null) { //If it hasn't been set create one
+                const marker = new mapboxgl.Marker()
+                    .setLngLat(latLng) //Set it's position on the map to the latLng
+                    .addTo(map) //Add the marker to the map
+                cityMarker = marker //Save a reference for next time we get a five day forecast
+            }else{ //If it already exists, just update it's location
+                cityMarker.setLngLat(latLng)
+            }
 
-            //Create the date field
-            const dateTime = document.createElement('div')
-
-            //Set the text of the date field
-            $(dateTime).text(item.dt_txt).addClass('h4')
-
-            //Append the date field to the item container
-            $(itemContainer).append(dateTime)
-
-            //Generate an image for the clouds
-            const itemImage = document.createElement('img')
-            $(itemImage).css({
-                width : '80px',
-                height : '50px'
-            })
-            //Get the icon code
-            const icon = item.weather[0].icon
-
-            // console.log(weatherConditionsClassLookup[item.weather[0].id])
-            // $(itemContainer).append(item.weather[0].id)
-
-            //Slap together the URL for the image src
-            // const url = `http://openweathermap.org/img/wn/${encodeURIComponent(icon)}@2x.png`
-            const url = weatherIconMap[icon]
-
-            //Set the src attribute of the image to the url
-            $(itemImage).attr('src',url)
-            $(itemImage).css({
-                width: '200px',
-                height: '200px',
-                margin: 'auto',
-                animation : 'glow 1s linear 1s infinite alternate'
+            //Get the data for the city
+            let data = await $.get('http://api.openweathermap.org/data/2.5/forecast', {
+                lat : latLng[1],
+                lon : latLng[0],
+                APPID: OPEN_WEATHER_APPID,
+                units : 'imperial'
             })
 
-            //Append the image to the item container
-            $(itemContainer).append(itemImage)
 
 
-            //Generate the low and high temperatures view
-            const lowHigh = document.createElement('div')
-            $(lowHigh).html(`<strong>Low:</strong> ${item.main.temp_min}˚F | <strong>High:</strong> ${item.main.temp_max}˚F`).addClass('text-nowrap')
+            //Set the text for the city name label
+            $('#city_name').text(data.city.name)
 
-            //Add them to the item container
-            $(itemContainer).append(lowHigh)
+            //Map from icon code to icon url
+            const weatherIconMap = {
+                '01d' : '/img/weathericons/day.svg', //Clear Day
+                '01n' : '/img/weathericons/night.svg', //Clear Night
+                '02d' : '/img/weathericons/cloudy-day-3.svg', //Few Clouds Day
+                '02n' : '/img/weathericons/cloudy-night-3.svg', //Few Clouds Night
+                '03d' : '/img/weathericons/cloudy-day-3.svg', //Scattered clouds
+                '03n' : '/img/weathericons/cloudy-night-3.svg', //Scattered clouds
+                '04d' : '/img/weathericons/cloudy.svg', //Broken Clouds
+                '04n' : '/img/weathericons/cloudy.svg', //Broken Clouds
+                '09d' : '/img/weathericons/rainy-7.svg', //Shower Rain Day
+                '09n' : '/img/weathericons/rainy-7.svg', //Shower Rain Night
+                '10d' : '/img/weathericons/rainy-1.svg', //Rainy Day
+                '10n' : '/img/weathericons/rainy-7.svg', //Rainy Night
+                '11d' : '/img/weathericons/thunder.svg', //Thunderstorm day
+                '11n' : '/img/weathericons/thunder.svg', //Thundersorms night
+                '13d' : '/img/weathericons/snowy-1.svg', //Snowy day
+                '13n' : '/img/weathericons/snowy-6.svg', //Snowy night
+                '50d' : 'http://openweathermap.org/img/wn/50d@2x.png', //Misty day
+                '50n' : 'http://openweathermap.org/img/wn/50n@2x.png' //Misty night
+            }
 
-            //Generate the Humidity view
-            const humidity = document.createElement('div')
-            $(humidity).html(`<strong>Humidity:</strong> ${item.main.humidity}`)
+            let list = Object.assign([],data.list)
+            console.log(list)
 
-            //Add the humidity view to the item container
-            $(itemContainer).append(humidity)
+            const populateWeatherCards = () => {
+                //Clear whatever may be inside the weather info container
+                $('#weather_info').empty()
 
-            //Generate the windage container
-            const windage = document.createElement('div')
-            $(windage).html(`<strong>Direction:</strong> ${item.wind.deg}˚ <br><strong>Gust:</strong> ${item.wind.gust}mph <br><strong>Speed:</strong> ${item.wind.speed}mph`)
+                //Iterate through each forecast item
+                list.forEach(item=>{
+                    //Create a container for the current forecast item
+                    const itemContainer = document.createElement('div')
 
-            //Add the windage view to the item container
-            $(itemContainer).append(windage)
+                    //Give the container a class of row for bootstrap styling
+                    $(itemContainer).addClass('row').addClass('mt-5').addClass('d-flex flex-col')
+
+                    //Create the date field
+                    const dateTime = document.createElement('div')
+
+                    //Get the icon code
+                    const icon = item.weather[0].icon
+                    console.log(item)
+
+                    //Set the text of the date field
+                    $(dateTime).text(new Date(item.dt_txt + 'Z').toDateString() + " @ " + moment(item.dt_txt.split(' ')[1], 'HH:mm:ss').format('h:mm A')).addClass('h4')
+
+                    //Append the date field to the item container
+                    $(itemContainer).append(dateTime)
+
+                    //Generate an image for the clouds
+                    const itemImage = document.createElement('img')
+                    $(itemImage).css({
+                        width : '80px',
+                        height : '50px'
+                    })
+
+
+                    // console.log(weatherConditionsClassLookup[item.weather[0].id])
+                    // $(itemContainer).append(item.weather[0].id)
+
+                    //Slap together the URL for the image src
+                    // const url = `http://openweathermap.org/img/wn/${encodeURIComponent(icon)}@2x.png`
+                    const url = weatherIconMap[icon]
+
+                    //Set the src attribute of the image to the url
+                    $(itemImage).attr('src',url)
+                    $(itemImage).css({
+                        width: '200px',
+                        height: '200px',
+                        margin: 'auto',
+                        animation : 'glow 1s linear 1s infinite alternate'
+                    })
+
+                    //Append the image to the item container
+                    $(itemContainer).append(itemImage)
+
+
+                    //Generate the low and high temperatures view
+                    const lowHigh = document.createElement('div')
+                    $(lowHigh).html(`<strong>Low:</strong> ${item.main.temp_min}˚F | <strong>High:</strong> ${item.main.temp_max}˚F`).addClass('text-nowrap')
+
+                    //Add them to the item container
+                    $(itemContainer).append(lowHigh)
+
+                    //Generate the Humidity view
+                    const humidity = document.createElement('div')
+                    $(humidity).html(`<strong>Humidity:</strong> ${item.main.humidity}`)
+
+                    //Add the humidity view to the item container
+                    $(itemContainer).append(humidity)
+
+                    //Generate the windage container
+                    const windage = document.createElement('div')
+                    $(windage).html(`<strong>Direction:</strong> ${item.wind.deg}˚ <br><strong>Gust:</strong> ${item.wind.gust}mph <br><strong>Speed:</strong> ${item.wind.speed}mph`)
+
+                    //Add the windage view to the item container
+                    $(itemContainer).append(windage)
 
 
 
-            //Generate the pressure view
-            const pressure = document.createElement('div')
-            $(pressure).html(`<strong>Pressure:</strong> ${item.main.pressure}`)
+                    //Generate the pressure view
+                    const pressure = document.createElement('div')
+                    $(pressure).html(`<strong>Pressure:</strong> ${item.main.pressure}`)
 
-            //Add it to the item container
-            $(itemContainer).append(pressure)
+                    //Add it to the item container
+                    $(itemContainer).append(pressure)
 
 
-            //Append the item container to the weather info
-            $('#weather_info').append(itemContainer).addClass('text-center justify-content-center')
+                    //Append the item container to the weather info
+                    $('#weather_info').append(itemContainer).addClass('text-center justify-content-center')
 
-            //Set the map's center to coordinates of the city
-            map.flyTo({
-                center: latLng,
-                zoom: 10
+                    //Set the map's center to coordinates of the city
+                    map.flyTo({
+                        center: latLng,
+                        zoom: 10
+                    })
+                })
+            }
+
+            populateWeatherCards()
+
+            $('#full-day-forecast').click(e=>{
+                //Parse the list
+                let daysSplit = new Map()
+                /*
+                    {
+                        "dt_txt": "2022-10-29 03:00:00"
+                    }
+                 */
+                list.forEach(item=>{
+                    let key = item.dt_txt.split(' ')[0]
+                    let time = item.dt_txt.split(' ')[1]
+                    let currentDays = daysSplit.get(key)
+
+                    if(currentDays === undefined){
+                        daysSplit.set(key,[{wind: item.wind,main:item.main,weather: [item.weather[0]], dt_txt: key + " " + time, time: time}])
+                    }else {
+                        daysSplit.set(key, [... daysSplit.get(key), {wind: item.wind,main: item.main,weather: [item.weather[0]], dt_txt: key + " " + time, time: time}])
+                    }
+                })
+
+                list = Array.from(daysSplit.values()).map(i=>i.filter(n=>n.time === '15:00:00')).filter(i=>i.length > 0).map(i=>i[0])
+                console.log(list)
+                $('#weather_info').empty()
+
+                populateWeatherCards()
             })
+
+            $('#every-three-hours-forecast').click(e=>{
+                list = Object.assign([],data.list)
+                $('#weather_info').empty()
+                populateWeatherCards()
+            })
+
+
+
+            //Return the data
+            return data
+        }
+
+
+        /*
+            Handle when the user clicks the get forecast button
+        */
+        $('#search_button').click(async (e)=>{
+            //Prevent the form from submitting
+            e.preventDefault()
+
+            //Get the value of the place they want the forecast for
+            let place = $('#search_input').val()
+
+            //Get the five day forecast for the searched place
+            await getFiveDayForecast(place)
         })
 
-        //Return the data
-        return data
-    }
+        /*
+            Initialize Map
+        */
+        let cityMarker = null
+        const initializeMap = async () => {
+            // As a bonus make sure you can update the marker's position to the new search result.
+            await getFiveDayForecast('Killeen,TX')
+        }
 
+        //Initialize the map
+        initializeMap()
 
-    /*
-        Handle when the user clicks the get forecast button
-     */
-    $('#search_button').click(async (e)=>{
-        //Prevent the form from submitting
-        e.preventDefault()
+    </script>
 
-        //Get the value of the place they want the forecast for
-        let place = $('#search_input').val()
-
-        //Get the five day forecast for the searched place
-        await getFiveDayForecast(place)
-    })
-
-    /*
-        Initialize Map
-     */
-    let cityMarker = null
-    const initializeMap = async () => {
-        // As a bonus make sure you can update the marker's position to the new search result.
-        await getFiveDayForecast('Killeen,TX')
-    }
-
-    //Initialize the map
-    initializeMap()
-
-  </script>
 </body>
 </html>
