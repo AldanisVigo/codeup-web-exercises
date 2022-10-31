@@ -59,7 +59,7 @@ let developers = [];
 //       note that you can also use destructuring assignment in the function
 //       parameter definition
 // TODO: rewrite the assignment below to use template strings
-users.forEach(({name,email,languages}) => developers.push(name + '\'s email is ' + email + name + ' knows ' + languages.join(', '))
+users.forEach(({name,email,languages}) => developers.push(name + '\'s email is ' + email + name + ' knows ' + languages.join(', ')))
 
 // TODO: Use `let` for the following variable
 let list = '<ul>';
