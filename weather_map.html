@@ -196,7 +196,9 @@
         //Generate a new map
         const map = new mapboxgl.Map({
             container: 'map', //set the container id
-            style: 'mapbox://styles/aldanisvigo/cl9t5yxbm003e15o2lfuc051q', //set a style
+            // https://api.mapbox.com/styles/v1/adoucett/cjf5k84bp0p7t2rmiwvwikhyn
+            //Mine : mapbox://styles/aldanisvigo/cl9t5yxbm003e15o2lfuc051q
+            style: 'mapbox://styles/adoucett/cjf5k84bp0p7t2rmiwvwikhyn', //set a style
             center: mapCenter, //set the default center lat lng coordinates
             zoom: zoomLevel //set the default zoom level
         })
@@ -223,7 +225,7 @@
 
             //Check if the cityMarker has been set
             if(cityMarker == null) { //If it hasn't been set create one
-                const marker = new mapboxgl.Marker()
+                const marker = new mapboxgl.Marker({draggable: true})
                     .setLngLat(latLng) //Set it's position on the map to the latLng
                     .addTo(map) //Add the marker to the map
                 cityMarker = marker //Save a reference for next time we get a five day forecast
@@ -231,8 +233,13 @@
                 cityMarker.setLngLat(latLng)
             }
 
+            let data
+            cityMarker.on('dragend',(e)=>{
+
+            })
+
             //Get the data for the city
-            let data = await $.get('http://api.openweathermap.org/data/2.5/forecast', {
+            data = await $.get('http://api.openweathermap.org/data/2.5/forecast', {
                 lat : latLng[1],
                 lon : latLng[0],
                 APPID: OPEN_WEATHER_APPID,
