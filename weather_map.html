@@ -181,7 +181,13 @@
         mapboxgl.accessToken = MAPBOX_KEY
 
         //Default zoom level for map
-        let zoomLevel = 20
+        let zoomLevel = 12
+
+        //Full forecast data
+        let data
+
+        //Current of forecast results
+        let list
 
         //Default map center coordinates
         let mapCenter = [
@@ -203,6 +209,10 @@
             zoom: zoomLevel //set the default zoom level
         })
 
+        const marker = new mapboxgl.Marker({draggable: true})
+            .setLngLat(mapCenter) //Set it's position on the map to the latLng
+            .addTo(map) //Add the marker to the map
+
         //Geocode function
         const geocode = (search, token) => {
             const baseUrl = 'https://api.mapbox.com'
@@ -218,25 +228,17 @@
 
         /*
             Function retrieves 5 day weather forecast from location
-         */
-        const getFiveDayForecast = async (city) => {
-            //Gecode the city's coordinates for the call to openweathermap
-            let latLng = await geocode(city,MAPBOX_KEY)
+        */
+        const getFiveDayForecast = async (type,value) => {
+            let latLng
+            switch(type){
+                case 'place':
+                    latLng = await geocode(value,MAPBOX_KEY)
+                    break
+                case 'coords':
+                    latLng = value
 
-            //Check if the cityMarker has been set
-            if(cityMarker == null) { //If it hasn't been set create one
-                const marker = new mapboxgl.Marker({draggable: true})
-                    .setLngLat(latLng) //Set it's position on the map to the latLng
-                    .addTo(map) //Add the marker to the map
-                cityMarker = marker //Save a reference for next time we get a five day forecast
-            }else{ //If it already exists, just update it's location
-                cityMarker.setLngLat(latLng)
             }
-
-            let data
-            cityMarker.on('dragend',(e)=>{
-
-            })
 
             //Get the data for the city
             data = await $.get('http://api.openweathermap.org/data/2.5/forecast', {
@@ -246,10 +248,34 @@
                 units : 'imperial'
             })
 
-
-
             //Set the text for the city name label
             $('#city_name').text(data.city.name)
+            list = Object.assign([],data.list)
+        }
+
+        /*
+            Position the marker to a city or place name
+        */
+        const moveMarkerToPlace = async place => {
+            let coords = await geocode(place, MAPBOX_KEY)
+            marker.setLngLat(coords)
+            map.flyTo({
+                center : coords,
+                zoom: 12
+            })
+        }
+
+        /*
+            Position the marker at the given lngLat
+         */
+        // const moveMarkerToLngLat = lngLat => marker.setLngLat(lngLat)
+
+        /*
+            Function populates the weather cards
+        */
+        const populateWeatherCards = async e => {
+            //Clear whatever may be inside the weather info container
+            $('#weather_info').empty()
 
             //Map from icon code to icon url
             const weatherIconMap = {
@@ -273,145 +299,90 @@
                 '50n' : 'http://openweathermap.org/img/wn/50n@2x.png' //Misty night
             }
 
-            let list = Object.assign([],data.list)
-            console.log(list)
+            //Iterate through each forecast item
+            list.forEach(item=>{
+                //Create a container for the current forecast item
+                const itemContainer = document.createElement('div')
 
-            const populateWeatherCards = () => {
-                //Clear whatever may be inside the weather info container
-                $('#weather_info').empty()
+                //Give the container a class of row for bootstrap styling
+                $(itemContainer).addClass('row').addClass('mt-5').addClass('d-flex flex-col')
 
-                //Iterate through each forecast item
-                list.forEach(item=>{
-                    //Create a container for the current forecast item
-                    const itemContainer = document.createElement('div')
+                //Create the date field
+                const dateTime = document.createElement('div')
 
-                    //Give the container a class of row for bootstrap styling
-                    $(itemContainer).addClass('row').addClass('mt-5').addClass('d-flex flex-col')
+                //Get the icon code
+                const icon = item.weather[0].icon
 
-                    //Create the date field
-                    const dateTime = document.createElement('div')
+                //Set the text of the date field
+                $(dateTime).text(new Date(item.dt_txt + 'Z').toDateString() + " @ " + moment(item.dt_txt.split(' ')[1], 'HH:mm:ss').format('h:mm A')).addClass('h4')
 
-                    //Get the icon code
-                    const icon = item.weather[0].icon
-                    console.log(item)
+                //Append the date field to the item container
+                $(itemContainer).append(dateTime)
 
-                    //Set the text of the date field
-                    $(dateTime).text(new Date(item.dt_txt + 'Z').toDateString() + " @ " + moment(item.dt_txt.split(' ')[1], 'HH:mm:ss').format('h:mm A')).addClass('h4')
-
-                    //Append the date field to the item container
-                    $(itemContainer).append(dateTime)
-
-                    //Generate an image for the clouds
-                    const itemImage = document.createElement('img')
-                    $(itemImage).css({
-                        width : '80px',
-                        height : '50px'
-                    })
-
-
-                    // console.log(weatherConditionsClassLookup[item.weather[0].id])
-                    // $(itemContainer).append(item.weather[0].id)
-
-                    //Slap together the URL for the image src
-                    // const url = `http://openweathermap.org/img/wn/${encodeURIComponent(icon)}@2x.png`
-                    const url = weatherIconMap[icon]
-
-                    //Set the src attribute of the image to the url
-                    $(itemImage).attr('src',url)
-                    $(itemImage).css({
-                        width: '200px',
-                        height: '200px',
-                        margin: 'auto',
-                        animation : 'glow 1s linear 1s infinite alternate'
-                    })
-
-                    //Append the image to the item container
-                    $(itemContainer).append(itemImage)
-
-
-                    //Generate the low and high temperatures view
-                    const lowHigh = document.createElement('div')
-                    $(lowHigh).html(`<strong>Low:</strong> ${item.main.temp_min}˚F | <strong>High:</strong> ${item.main.temp_max}˚F`).addClass('text-nowrap')
-
-                    //Add them to the item container
-                    $(itemContainer).append(lowHigh)
-
-                    //Generate the Humidity view
-                    const humidity = document.createElement('div')
-                    $(humidity).html(`<strong>Humidity:</strong> ${item.main.humidity}`)
-
-                    //Add the humidity view to the item container
-                    $(itemContainer).append(humidity)
-
-                    //Generate the windage container
-                    const windage = document.createElement('div')
-                    $(windage).html(`<strong>Direction:</strong> ${item.wind.deg}˚ <br><strong>Gust:</strong> ${item.wind.gust}mph <br><strong>Speed:</strong> ${item.wind.speed}mph`)
-
-                    //Add the windage view to the item container
-                    $(itemContainer).append(windage)
-
-
-
-                    //Generate the pressure view
-                    const pressure = document.createElement('div')
-                    $(pressure).html(`<strong>Pressure:</strong> ${item.main.pressure}`)
-
-                    //Add it to the item container
-                    $(itemContainer).append(pressure)
-
-
-                    //Append the item container to the weather info
-                    $('#weather_info').append(itemContainer).addClass('text-center justify-content-center')
-
-                    //Set the map's center to coordinates of the city
-                    map.flyTo({
-                        center: latLng,
-                        zoom: 10
-                    })
-                })
-            }
-
-            populateWeatherCards()
-
-            $('#full-day-forecast').click(e=>{
-                //Parse the list
-                let daysSplit = new Map()
-                /*
-                    {
-                        "dt_txt": "2022-10-29 03:00:00"
-                    }
-                 */
-                list.forEach(item=>{
-                    let key = item.dt_txt.split(' ')[0]
-                    let time = item.dt_txt.split(' ')[1]
-                    let currentDays = daysSplit.get(key)
-
-                    if(currentDays === undefined){
-                        daysSplit.set(key,[{wind: item.wind,main:item.main,weather: [item.weather[0]], dt_txt: key + " " + time, time: time}])
-                    }else {
-                        daysSplit.set(key, [... daysSplit.get(key), {wind: item.wind,main: item.main,weather: [item.weather[0]], dt_txt: key + " " + time, time: time}])
-                    }
+                //Generate an image for the clouds
+                const itemImage = document.createElement('img')
+                $(itemImage).css({
+                    width : '80px',
+                    height : '50px'
                 })
 
-                list = Array.from(daysSplit.values()).map(i=>i.filter(n=>n.time === '15:00:00')).filter(i=>i.length > 0).map(i=>i[0])
-                console.log(list)
-                $('#weather_info').empty()
+                //Slap together the URL for the image src
+                const url = weatherIconMap[icon]
 
-                populateWeatherCards()
+                //Set the src attribute of the image to the url
+                $(itemImage).attr('src',url)
+                $(itemImage).css({
+                    width: '200px',
+                    height: '200px',
+                    margin: 'auto',
+                    animation : 'glow 1s linear 1s infinite alternate'
+                })
+
+                //Append the image to the item container
+                $(itemContainer).append(itemImage)
+
+
+                //Generate the low and high temperatures view
+                const lowHigh = document.createElement('div')
+                $(lowHigh).html(`<strong>Low:</strong> ${item.main.temp_min}˚F | <strong>High:</strong> ${item.main.temp_max}˚F`).addClass('text-nowrap')
+
+                //Add them to the item container
+                $(itemContainer).append(lowHigh)
+
+                //Generate the Humidity view
+                const humidity = document.createElement('div')
+                $(humidity).html(`<strong>Humidity:</strong> ${item.main.humidity}`)
+
+                //Add the humidity view to the item container
+                $(itemContainer).append(humidity)
+
+                //Generate the windage container
+                const windage = document.createElement('div')
+                $(windage).html(`<strong>Direction:</strong> ${item.wind.deg}˚ <br><strong>Gust:</strong> ${item.wind.gust}mph <br><strong>Speed:</strong> ${item.wind.speed}mph`)
+
+                //Add the windage view to the item container
+                $(itemContainer).append(windage)
+
+
+
+                //Generate the pressure view
+                const pressure = document.createElement('div')
+                $(pressure).html(`<strong>Pressure:</strong> ${item.main.pressure}`)
+
+                //Add it to the item container
+                $(itemContainer).append(pressure)
+
+
+                //Append the item container to the weather info
+                $('#weather_info').append(itemContainer).addClass('text-center justify-content-center')
+
+                //Set the map's center to coordinates of the city
+                // map.flyTo({
+                //     center: latLng,
+                //     zoom: 10
+                // })
             })
-
-            $('#every-three-hours-forecast').click(e=>{
-                list = Object.assign([],data.list)
-                $('#weather_info').empty()
-                populateWeatherCards()
-            })
-
-
-
-            //Return the data
-            return data
         }
-
 
         /*
             Handle when the user clicks the get forecast button
@@ -420,20 +391,70 @@
             //Prevent the form from submitting
             e.preventDefault()
 
-            //Get the value of the place they want the forecast for
+            // //Get the value of the place they want the forecast for
             let place = $('#search_input').val()
 
             //Get the five day forecast for the searched place
-            await getFiveDayForecast(place)
+            await getFiveDayForecast('place',place)
+
+            //Move the marker to the new place
+            await moveMarkerToPlace(place)
+
+            //Populate the weather cards
+            await populateWeatherCards(e)
         })
+
+        /*
+           Handle clicks on 3-hour forecast button
+        */
+        $('#every-three-hours-forecast').click(e=>{
+            list = Object.assign([],data.list)
+            $('#weather_info').empty()
+            populateWeatherCards(e)
+        })
+
+        /*
+          Handle clicks on full day forecast button
+        */
+        $('#full-day-forecast').click(async e=>{
+            //Parse the list
+            let daysSplit = new Map()
+            list.forEach(item=>{
+                let key = item.dt_txt.split(' ')[0]
+                let time = item.dt_txt.split(' ')[1]
+                let currentDays = daysSplit.get(key)
+
+                if(currentDays === undefined){
+                    daysSplit.set(key,[{wind: item.wind,main:item.main,weather: [item.weather[0]], dt_txt: key + " " + time, time: time}])
+                }else {
+                    daysSplit.set(key, [... daysSplit.get(key), {wind: item.wind,main: item.main,weather: [item.weather[0]], dt_txt: key + " " + time, time: time}])
+                }
+            })
+
+            list = Array.from(daysSplit.values()).map(i=>i.filter(n=>n.time === '15:00:00')).filter(i=>i.length > 0).map(i=>i[0])
+            $('#weather_info').empty()
+            await populateWeatherCards(e)
+        })
+
+
+        /*
+            Handle when user drags the marker on the map
+        */
+        marker.on('dragend',async e=>{
+            let coords = e.target.getLngLat()
+            await getFiveDayForecast('coords',[coords.lng,coords.lat])
+            $('#search_input').val(data.city.name)
+            await populateWeatherCards(e)
+        })
+
 
         /*
             Initialize Map
         */
-        let cityMarker = null
         const initializeMap = async () => {
             // As a bonus make sure you can update the marker's position to the new search result.
-            await getFiveDayForecast('Killeen,TX')
+            await getFiveDayForecast('place','Killeen,TX, USA')
+            await populateWeatherCards('Killeen,TX')
         }
 
         //Initialize the map
